@@ -12,6 +12,7 @@ class TelegramPollingService {
     this.isPolling = false;
 
     this.bossChatHistory = [];
+    this.postScheduler = null;
 
     // Load saved owner chatId if exists
     try {
@@ -21,6 +22,10 @@ class TelegramPollingService {
         console.log(`📱 [Telegram Polling] Loaded saved owner Chat ID: ${this.ownerChatId}`);
       }
     } catch (e) {}
+  }
+
+  setPostScheduler(postScheduler) {
+    this.postScheduler = postScheduler;
   }
 
   start() {
@@ -81,6 +86,18 @@ class TelegramPollingService {
 
       console.log(`📲 [Telegram] Owner tapped button on phone: ${callbackData}`);
 
+      // 1.1 Post Approval Callback (Social Media Auto-Poster)
+      if (callbackData.startsWith('post_')) {
+        const parts = callbackData.split('_');
+        const postAction = parts[1]; // approve | regen | cancel
+        const draftId = parts[2];
+        if (this.postScheduler) {
+          await this.postScheduler.handleApproval(draftId, postAction);
+        }
+        return;
+      }
+
+      // 1.2 Deal Approval Callback
       const parts = callbackData.split('_');
       // deal, action, proposalId, (counterPrice)
       const action = parts[1]; // accept | counter | reject
@@ -112,12 +129,30 @@ class TelegramPollingService {
         this.saveChatId(chatId);
 
         const welcome = 
-          `👋 *সালাম বস!* আমি আপনার সার্বক্ষণিক এআই সেলস ম্যানেজার *@LabibFohayerBot*।\n\n` +
+          `👋 *সালাম বস!* আমি আপনার সার্বক্ষণিক এআই সেলস ও সোশ্যাল মিডিয়া ম্যানেজার *@LabibFohayerBot*।\n\n` +
           `✅ আপনার ফোনের সাথে সিস্টেম সফলভাবে যুক্ত হয়েছে!\n\n` +
-          `📌 এখন থেকে ফেসবুক মেসেঞ্জারে কোনো ক্লায়েন্ট দামাদামি করলে বা ডিসকাউন্ট চাইলে, আমি সাথে সাথে এখানে আপনার ফোনে অনুমোদন চেয়ে বাটন পাঠাব। আপনি শুধু বাটনে চাপ দেবেন! 🚀`;
+          `📌 *প্রধান সুবিধাসমূহ:*\n` +
+          `1. ক্লায়েন্টের দামাদামির বাটন এপ্রুভাল (Accept/Counter/Reject)\n` +
+          `2. ফেসবুকে স্বয়ংক্রিয় পোস্ট ড্রাফট ও অনুমোদন (/post লিখুন নতুন পোস্টের জন্য)\n` +
+          `3. আমার সাথে যেকোনো ব্যক্তিগত পরামর্শ ও নির্দেশনা! 🚀`;
 
         this.sendMessage(chatId, welcome);
         console.log(`🎉 [Telegram] Owner Phone REGISTERED! Chat ID: ${chatId}`);
+        return;
+      }
+
+      // On-demand Social Media Post Generator Command
+      if (text === '/post' || text.toLowerCase() === 'post' || text.includes('পোস্ট বানাও') || text.includes('পোস্ট তৈরি করো')) {
+        if (this.postScheduler) {
+          await this.postScheduler.triggerNewDraft();
+        }
+        return;
+      }
+
+      // Feedback on active post draft
+      if (this.postScheduler?.pendingDraft && (text.includes('ক্যাপশন') || text.includes('পোস্ট') || text.includes('ছাড়') || text.includes('ডিসকাউন্ট') || text.startsWith('না'))) {
+        console.log(`📱 [Telegram] Boss provided feedback on post draft: "${text}"`);
+        await this.postScheduler.triggerNewDraft(text);
         return;
       }
 

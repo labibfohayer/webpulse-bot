@@ -38,6 +38,12 @@ const tgToken = config.telegram?.botToken || '8746325618:AAHLKzCLFHCEbSU9KzehZC3
 const tgPolling = new TelegramPollingService(tgToken, negotiatorEngine, configPath);
 tgPolling.start();
 
+// 3. Start Social Media Autonomous AI Scheduler
+const { PostSchedulerService } = require('./postScheduler');
+const postScheduler = new PostSchedulerService(tgPolling, config);
+tgPolling.setPostScheduler(postScheduler);
+postScheduler.start();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -188,6 +194,15 @@ app.get('/api/orders', (req, res) => {
     totalSales: pipeline.processedOrders.reduce((sum, o) => sum + o.pricing.grandTotal, 0),
     totalOrders: pipeline.processedOrders.length
   });
+});
+
+app.get('/api/posts/trigger', async (req, res) => {
+  const draft = await postScheduler.triggerNewDraft();
+  res.json({ success: true, draft });
+});
+
+app.get('/api/posts/pending', (req, res) => {
+  res.json({ pendingDraft: postScheduler.pendingDraft });
 });
 
 app.listen(PORT, () => {
