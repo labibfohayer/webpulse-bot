@@ -23,13 +23,11 @@ const CONTENT_PILLARS = [
   }
 ];
 
-const IMAGE_PROMPTS = [
-  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80'
-];
+function getDynamicImageUrl(topicTitle) {
+  const seed = Date.now() + Math.floor(Math.random() * 100000);
+  const promptText = encodeURIComponent(`modern futuristic 3D digital technology banner for ${topicTitle}, cyber glowing holographic interface, sleek corporate branding, business growth, high resolution 4k wallpaper`);
+  return `https://image.pollinations.ai/prompt/${promptText}?width=1200&height=900&seed=${seed}&nologo=true`;
+}
 
 async function generatePostDraft(topicIndex = null, feedback = null, currentCaption = null, apiKey) {
   const index = (topicIndex !== null && topicIndex >= 0) 
@@ -37,7 +35,7 @@ async function generatePostDraft(topicIndex = null, feedback = null, currentCapt
     : Math.floor(Math.random() * CONTENT_PILLARS.length);
 
   const pillar = CONTENT_PILLARS[index];
-  const imageUrl = IMAGE_PROMPTS[index];
+  const imageUrl = getDynamicImageUrl(pillar.topic);
 
   const systemPrompt = `You are the lead social media strategist and copywriter for WebPulse Automation, an elite software and digital automation agency in Bangladesh.
 Company details:
@@ -47,7 +45,7 @@ Company details:
 - Services: Custom E-Commerce websites, AI chatbots, corporate business websites, sales automation, CRM & custom software.
 - Benefits: 100% responsive, bKash/Nagad/Card integration, SEO setup, 6 months unlimited free support.
 - Office: Dhaka, Bangladesh.
-- Contact: Inbox page or WhatsApp: +8801700000000.
+- Official WhatsApp: 01545321458 (বা +8801545321458).
 
 Guidelines:
 1. Write in rich, highly engaging, polished, and comprehensive Bengali (বাংলা).
@@ -58,7 +56,7 @@ Guidelines:
    - ✨ 4 to 6 clear bullet points detailing key features, benefits, speed & free support guarantees
    - 🤝 Mention leadership (মাননীয় চেয়ারম্যান জনাব লাবিব ফোহায়ের এবং ম্যানেজিং ডিরেক্টর জনাব জায়ান আরহাম) if relevant to special offers or vision
    - 🎁 Special offer or limited-time consultation call-out
-   - 📞 Clear Call to Action (ইনবক্স করুন অথবা হোয়াটসঅ্যাপে যোগাযোগ করুন: +8801700000000)
+   - 📞 Clear Call to Action (ইনবক্স করুন অথবা হোয়াটসঅ্যাপে যোগাযোগ করুন: 01545321458)
    - 🏷️ 5-6 trending hashtags (#WebPulseAutomation #BusinessGrowth #EcommerceWebsite #AIAutomation #DigitalBangladesh)
 3. CRITICAL: NEVER cut off or stop mid-sentence. The post must be fully completed and well-rounded from headline to hashtags.
 4. Output ONLY the complete, ready-to-publish post caption text, nothing else (no introductory or conversational remarks).`;

@@ -150,37 +150,75 @@ class PostSchedulerService {
 
   sendPhoto(chatId, photoUrl, caption) {
     return new Promise((resolve) => {
-      const data = JSON.stringify({ chat_id: chatId, photo: photoUrl, caption: caption });
-      const req = https.request({
-        hostname: 'api.telegram.org',
-        path: `/bot${this.tg.token}/sendPhoto`,
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) }
-      }, (res) => {
-        res.on('data', () => {});
-        res.on('end', () => resolve(true));
-      });
-      req.on('error', () => resolve(false));
-      req.write(data);
-      req.end();
+      const sendReq = (urlToUse, isRetry = false) => {
+        const data = JSON.stringify({ chat_id: chatId, photo: urlToUse, caption: caption });
+        const req = https.request({
+          hostname: 'api.telegram.org',
+          path: `/bot${this.tg.token}/sendPhoto`,
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) }
+        }, (res) => {
+          let respData = '';
+          res.on('data', chunk => respData += chunk);
+          res.on('end', () => {
+            try {
+              const parsed = JSON.parse(respData);
+              if (!parsed.ok && !isRetry) {
+                console.warn('⚠️ [Telegram] sendPhoto dynamic failed, retrying with high-res backup:', parsed.description);
+                const backupUrl = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80';
+                sendReq(backupUrl, true);
+                return;
+              }
+            } catch (e) {}
+            resolve(true);
+          });
+        });
+        req.on('error', (err) => {
+          if (!isRetry) {
+            const backupUrl = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80';
+            sendReq(backupUrl, true);
+          } else {
+            resolve(false);
+          }
+        });
+        req.write(data);
+        req.end();
+      };
+      sendReq(photoUrl, false);
     });
   }
 
   sendMessageWithButtons(chatId, text, replyMarkup) {
     return new Promise((resolve) => {
-      const data = JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'Markdown', reply_markup: replyMarkup });
-      const req = https.request({
-        hostname: 'api.telegram.org',
-        path: `/bot${this.tg.token}/sendMessage`,
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) }
-      }, (res) => {
-        res.on('data', () => {});
-        res.on('end', () => resolve(true));
-      });
-      req.on('error', () => resolve(false));
-      req.write(data);
-      req.end();
+      const sendReq = (useMarkdown) => {
+        const payload = { chat_id: chatId, text: text, reply_markup: replyMarkup };
+        if (useMarkdown) payload.parse_mode = 'Markdown';
+        const data = JSON.stringify(payload);
+        const req = https.request({
+          hostname: 'api.telegram.org',
+          path: `/bot${this.tg.token}/sendMessage`,
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) }
+        }, (res) => {
+          let respData = '';
+          res.on('data', chunk => respData += chunk);
+          res.on('end', () => {
+            try {
+              const parsed = JSON.parse(respData);
+              if (!parsed.ok && useMarkdown) {
+                console.warn('⚠️ [Telegram] Markdown parse failed, retrying plain text:', parsed.description);
+                sendReq(false);
+                return;
+              }
+            } catch (e) {}
+            resolve(true);
+          });
+        });
+        req.on('error', () => resolve(false));
+        req.write(data);
+        req.end();
+      };
+      sendReq(true);
     });
   }
 }
