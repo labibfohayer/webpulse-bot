@@ -1,14 +1,41 @@
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 const { generatePostDraft, CONTENT_PILLARS } = require('./contentGenerator');
 const { generateVideoDraft } = require('./videoGenerator');
 const { publishToFacebook } = require('./postPublisher');
+
+const DRAFT_FILE = path.join(__dirname, '../data/pending_draft.json');
+
+function savePendingDraft(draft) {
+  try {
+    const dir = path.dirname(DRAFT_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    if (draft) {
+      fs.writeFileSync(DRAFT_FILE, JSON.stringify(draft, null, 2), 'utf8');
+    } else if (fs.existsSync(DRAFT_FILE)) {
+      fs.unlinkSync(DRAFT_FILE);
+    }
+  } catch (e) {
+    console.warn('⚠️ Draft persistence error:', e.message);
+  }
+}
+
+function loadPendingDraft() {
+  try {
+    if (fs.existsSync(DRAFT_FILE)) {
+      return JSON.parse(fs.readFileSync(DRAFT_FILE, 'utf8'));
+    }
+  } catch (e) {}
+  return null;
+}
 
 class PostSchedulerService {
   constructor(telegramPollingService, config) {
     this.tg = telegramPollingService;
     this.config = config;
     this.currentTopicIndex = 0;
-    this.pendingDraft = null;
+    this.pendingDraft = loadPendingDraft();
     this.timer = null;
   }
 
@@ -69,6 +96,7 @@ class PostSchedulerService {
         this.tg.sendMessage(ownerChatId, '🎬 *স্যার, আমি WebPulse Automation-এর জন্য একটি নতুন ৩০-৪০ সেকেন্ডের বাংলা ভিডিও তৈরি করছি...*\n\n🎙️ এআই ভয়েসওভার ও অডিও সিঙ্ক হচ্ছে, অনুগ্রহ করে ২০-৩০ সেকেন্ড অপেক্ষা করুন।');
         const draft = await generateVideoDraft(this.currentTopicIndex, feedback, apiKey);
         this.pendingDraft = draft;
+        savePendingDraft(draft);
         this.currentTopicIndex = (this.currentTopicIndex + 1) % CONTENT_PILLARS.length;
         await this.sendDraftToOwner(ownerChatId, draft);
         return draft;
@@ -81,6 +109,7 @@ class PostSchedulerService {
           apiKey
         );
         this.pendingDraft = draft;
+        savePendingDraft(draft);
         this.currentTopicIndex = (this.currentTopicIndex + 1) % CONTENT_PILLARS.length;
         await this.sendDraftToOwner(ownerChatId, draft);
         return draft;
@@ -137,22 +166,27 @@ class PostSchedulerService {
 
   async handleApproval(draftId, action) {
     const ownerChatId = this.tg.ownerChatId || this.config.telegram?.chatId;
+    if (!this.pendingDraft) {
+      this.pendingDraft = loadPendingDraft();
+    }
 
-    if (!this.pendingDraft || this.pendingDraft.id !== draftId) {
-      this.tg.sendMessage(ownerChatId, '⚠️ স্যার, এই ড্রাফটটির মেয়াদ শেষ হয়ে গেছে। নতুন ড্রাফট পেতে লিখুন: "/post" বা "/video"');
+    const draft = this.pendingDraft;
+    if (!draft) {
+      this.tg.sendMessage(ownerChatId, '⚠️ স্যার, কোনো ড্রাফট সক্রিয় নেই। নতুন ড্রাফটের জন্য লিখুন: "/post" বা "/video"');
       return;
     }
 
     if (action === 'approve') {
-      const isVideo = !!this.pendingDraft.isVideo;
+      const isVideo = !!draft.isVideo;
       this.tg.sendMessage(ownerChatId, `⏳ স্যার, ${isVideo ? 'ভিডিওটি' : 'পোস্টটি'} WebPulse Automation ফেসবুক পেজে পাবলিশ করা হচ্ছে...`);
 
-      let mediaUrl = this.pendingDraft.imageUrl;
+      let mediaUrl = draft.imageUrl;
       if (isVideo) {
-        mediaUrl = `https://webpulse-bot.onrender.com/media/${this.pendingDraft.videoFileName}`;
+        mediaUrl = `https://webpulse-bot.onrender.com/media/${draft.videoFileName}`;
       }
 
-      const result = await publishToFacebook(this.pendingDraft.caption, mediaUrl, this.config, isVideo);
+      console.log(`🚀 [Social Media AI] Publishing ${isVideo ? 'VIDEO' : 'PHOTO'} to Facebook...`);
+      const result = await publishToFacebook(draft.caption, mediaUrl, this.config, isVideo);
 
       if (result.success) {
         this.tg.sendMessage(
@@ -160,21 +194,23 @@ class PostSchedulerService {
           `🎉 *অভিনন্দন স্যার!* ${isVideo ? 'ভিডিওটি' : 'পোস্টটি'} সফলভাবে পেজে পাবলিশ হয়েছে!\n\n🔗 পোস্ট লিংক: ${result.postUrl || 'Facebook Page Wall'}`
         );
         this.pendingDraft = null;
+        savePendingDraft(null);
       } else {
         if (result.requiresPermission) {
           this.tg.sendMessage(
             ownerChatId,
-            `⚠️ *স্যার, ফেসবুক পারমিশন আপডেট প্রয়োজন:*\nফেসবুক পেজে পোস্ট করার জন্য 'pages_manage_posts' পারমিশন প্রয়োজন।\n\nতবে আপনার পোস্ট ক্যাপশনটি সম্পূর্ণ তৈরি আছে, আপনি চাইলে সরাসরি কপি করে পেজে দিয়ে দিতে পারেন:\n\n${this.pendingDraft.caption}`
+            `⚠️ *স্যার, ফেসবুক পারমিশন আপডেট প্রয়োজন:*\nফেসবুক পেজে পোস্ট করার জন্য 'pages_manage_posts' পারমিশন প্রয়োজন।\n\nতবে আপনার পোস্ট ক্যাপশনটি সম্পূর্ণ তৈরি আছে, আপনি চাইলে সরাসরি কপি করে পেজে দিয়ে দিতে পারেন:\n\n${draft.caption}`
           );
         } else {
           this.tg.sendMessage(ownerChatId, `⚠️ স্যার, ফেসবুকে পোস্ট করতে ত্রুটি হয়েছে: ${result.message}`);
         }
       }
     } else if (action === 'regen') {
-      const isVideo = !!this.pendingDraft.isVideo;
+      const isVideo = !!draft.isVideo;
       await this.triggerNewDraft('Generate a different, exciting angle for this post', isVideo);
     } else if (action === 'cancel') {
       this.pendingDraft = null;
+      savePendingDraft(null);
       this.tg.sendMessage(ownerChatId, '❌ স্যার, প্রস্তাবিত পোস্ট ড্রাফটটি বাতিল করা হয়েছে। পরবর্তী শিডিউল অনুযায়ী নতুন ড্রাফট পাঠানো হবে।');
     }
   }

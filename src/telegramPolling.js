@@ -90,7 +90,7 @@ class TelegramPollingService {
       if (callbackData.startsWith('post_')) {
         const parts = callbackData.split('_');
         const postAction = parts[1]; // approve | regen | cancel
-        const draftId = parts[2];
+        const draftId = parts.slice(2).join('_'); // Preserves full ID like vid_1789545298454_3n0m3
         if (this.postScheduler) {
           await this.postScheduler.handleApproval(draftId, postAction);
         }
@@ -142,12 +142,13 @@ class TelegramPollingService {
         return;
       }
 
-      // On-demand Social Media Video Generator Command (supports /video, /vedio, /vdo, etc.)
-      const lower = text.toLowerCase().trim();
+      // On-demand Social Media Video Generator Command
       const isVideoCmd = 
-        lower.startsWith('/video') || lower.startsWith('/vedio') || lower.startsWith('/vdo') ||
+        lower === '/video' || lower === '/vedio' || lower === '/vdo' ||
         lower === 'video' || lower === 'vedio' || lower === 'vdo' ||
-        text.includes('ভিডিও') || lower.includes('vedio') || lower.includes('video') || lower.includes('vdo');
+        lower === 'ভিডিও' ||
+        lower.startsWith('/video ') || lower.startsWith('/vedio ') || lower.startsWith('/vdo ') ||
+        text.includes('ভিডিও বানাও') || text.includes('ভিডিও তৈরি করো') || text.includes('নতুন ভিডিও');
 
       if (isVideoCmd) {
         if (this.postScheduler) {
@@ -157,7 +158,12 @@ class TelegramPollingService {
       }
 
       // On-demand Social Media Post Generator Command
-      if (text === '/post' || text.toLowerCase() === 'post' || text.includes('পোস্ট বানাও') || text.includes('পোস্ট তৈরি করো')) {
+      const isPostCmd = 
+        lower === '/post' || lower === 'post' ||
+        lower.startsWith('/post ') ||
+        text.includes('পোস্ট বানাও') || text.includes('পোস্ট তৈরি করো') || text.includes('নতুন পোস্ট');
+
+      if (isPostCmd) {
         if (this.postScheduler) {
           await this.postScheduler.triggerNewDraft(null, false);
         }
