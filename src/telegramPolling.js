@@ -147,6 +147,20 @@ class TelegramPollingService {
         return;
       }
 
+      // Automatic Facebook Page Token updater
+      if (text.startsWith('EAA') && text.length > 50) {
+        try {
+          const cfg = JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
+          if (!cfg.facebook) cfg.facebook = {};
+          cfg.facebook.pageAccessToken = text;
+          fs.writeFileSync(this.configPath, JSON.stringify(cfg, null, 2), 'utf8');
+          this.sendMessage(chatId, '✅ *ধন্যবাদ বস!* আপনার নতুন ফেসবুক পেইজ টোকেন সফলভাবে সেভ করা হয়েছে। এখন আপনি পেজে সরাসরি পোস্ট করতে পারবেন!');
+          return;
+        } catch (e) {
+          console.warn('⚠️ Token save error:', e.message);
+        }
+      }
+
       // On-demand Social Media Video Generator Command
       const isVideoCmd = 
         lower === '/video' || lower === '/vedio' || lower === '/vdo' ||

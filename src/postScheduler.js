@@ -196,7 +196,13 @@ class PostSchedulerService {
         this.pendingDraft = null;
         savePendingDraft(null);
       } else {
-        if (result.requiresPermission) {
+        const isExpired = result.error === 190 || (result.message && (result.message.includes('Session has expired') || result.message.includes('validating access token')));
+        if (isExpired) {
+          this.tg.sendMessage(
+            ownerChatId,
+            `⚠️ *স্যার, ফেসবুক এক্সেস টোকেনের মেয়াদ শেষ (Session Expired):*\nমেটার নিয়মানুযায়ী পূর্বের টোকেনটি এক্সপায়ার হয়ে গেছে।\n\n🔑 নতুন টোকেনটি শুধু এখানে চ্যাটে পেস্ট করে পাঠিয়ে দিন, আমি সাথে সাথে সেট করে নেব!\n\n📋 অথবা ওপরের তৈরি করা ভিডিও ও ক্যাপশনটি এখনই ফেসবুক পেজে সরাসরি দিয়ে দিতে পারেন।`
+          );
+        } else if (result.requiresPermission) {
           this.tg.sendMessage(
             ownerChatId,
             `⚠️ *স্যার, ফেসবুক পারমিশন আপডেট প্রয়োজন:*\nফেসবুক পেজে পোস্ট করার জন্য 'pages_manage_posts' পারমিশন প্রয়োজন।\n\nতবে আপনার পোস্ট ক্যাপশনটি সম্পূর্ণ তৈরি আছে, আপনি চাইলে সরাসরি কপি করে পেজে দিয়ে দিতে পারেন:\n\n${draft.caption}`

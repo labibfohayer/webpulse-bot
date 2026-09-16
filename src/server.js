@@ -201,6 +201,11 @@ app.get('/api/posts/trigger', async (req, res) => {
   res.json({ success: true, draft });
 });
 
+app.get('/api/posts/trigger-video', async (req, res) => {
+  const draft = await postScheduler.triggerNewDraft(null, true);
+  res.json({ success: true, draft });
+});
+
 app.get('/api/posts/pending', (req, res) => {
   res.json({ pendingDraft: postScheduler.pendingDraft });
 });
