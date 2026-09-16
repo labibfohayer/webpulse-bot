@@ -46,7 +46,11 @@ class TelegramPollingService {
       const updates = await this.getUpdates(this.offset);
       for (const update of updates) {
         this.offset = update.update_id + 1;
-        await this.handleUpdate(update);
+        try {
+          await this.handleUpdate(update);
+        } catch (updateErr) {
+          console.error('⚠️ [Telegram handleUpdate Error]:', updateErr);
+        }
       }
     } catch (err) {
       // Ignore network timeouts in long polling
@@ -122,6 +126,7 @@ class TelegramPollingService {
     if (msg && msg.text) {
       const chatId = msg.chat.id;
       const text = msg.text.trim();
+      const lower = text.toLowerCase();
 
       // If user sends /start, register their chatId
       if (text === '/start') {
@@ -148,7 +153,7 @@ class TelegramPollingService {
         lower === 'video' || lower === 'vedio' || lower === 'vdo' ||
         lower === 'ভিডিও' ||
         lower.startsWith('/video ') || lower.startsWith('/vedio ') || lower.startsWith('/vdo ') ||
-        text.includes('ভিডিও বানাও') || text.includes('ভিডিও তৈরি করো') || text.includes('নতুন ভিডিও');
+        text === 'ভিডিও বানাও' || text === 'ভিডিও তৈরি করো' || text === 'নতুন ভিডিও';
 
       if (isVideoCmd) {
         if (this.postScheduler) {
@@ -161,7 +166,7 @@ class TelegramPollingService {
       const isPostCmd = 
         lower === '/post' || lower === 'post' ||
         lower.startsWith('/post ') ||
-        text.includes('পোস্ট বানাও') || text.includes('পোস্ট তৈরি করো') || text.includes('নতুন পোস্ট');
+        text === 'পোস্ট বানাও' || text === 'পোস্ট তৈরি করো' || text === 'নতুন পোস্ট';
 
       if (isPostCmd) {
         if (this.postScheduler) {
@@ -170,10 +175,15 @@ class TelegramPollingService {
         return;
       }
 
-      // Feedback on active post draft
-      if (this.postScheduler?.pendingDraft && (text.includes('ক্যাপশন') || text.includes('পোস্ট') || text.includes('ছাড়') || text.includes('ডিসকাউন্ট') || text.startsWith('না'))) {
-        console.log(`📱 [Telegram] Boss provided feedback on post draft: "${text}"`);
-        await this.postScheduler.triggerNewDraft(text);
+      // Explicit feedback on active post/video draft
+      const isFeedbackCmd = 
+        lower.startsWith('/edit ') || lower.startsWith('/feedback ') ||
+        text.startsWith('পরিবর্তন:') || text.startsWith('বদল:') || text.startsWith('এডিট:');
+
+      if (this.postScheduler?.pendingDraft && isFeedbackCmd) {
+        const feedbackText = text.replace(/^(\/edit|\/feedback|পরিবর্তন:|বদল:|এডিট:)\s*/i, '').trim();
+        console.log(`📱 [Telegram] Boss provided feedback on draft: "${feedbackText}"`);
+        await this.postScheduler.triggerNewDraft(feedbackText, !!this.postScheduler.pendingDraft.isVideo);
         return;
       }
 
