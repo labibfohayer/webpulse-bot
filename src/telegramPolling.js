@@ -147,14 +147,60 @@ class TelegramPollingService {
         return;
       }
 
-      // Automatic Facebook Page Token updater
+      // Automatic Facebook Page Token updater with Live Verification
       if (text.startsWith('EAA') && text.length > 50) {
         try {
+          const cleanToken = text.trim();
+          this.sendMessage(chatId, '🔍 *টোকেনটি মেটা (Facebook) সার্ভারে যাচাই করা হচ্ছে...*');
+
+          const verifyRes = await new Promise((resolve) => {
+            const pageId = '1240526229154048';
+            https.get(`https://graph.facebook.com/v19.0/${pageId}?fields=id,name&access_token=${cleanToken}`, (res) => {
+              let d = '';
+              res.on('data', c => d += c);
+              res.on('end', () => {
+                try {
+                  const j = JSON.parse(d);
+                  if (j.id) resolve({ valid: true, name: j.name });
+                  else resolve({ valid: false, error: j.error?.message || 'Invalid token' });
+                } catch (e) {
+                  resolve({ valid: false, error: 'Verification failed' });
+                }
+              });
+            }).on('error', (err) => resolve({ valid: false, error: err.message }));
+          });
+
+          if (!verifyRes.valid) {
+            if (verifyRes.error.includes('decrypted')) {
+              this.sendMessage(
+                chatId,
+                `⚠️ *টোকেনটি অসম্পূর্ণ বা কপি করার সময় কেটে গেছে!*\n_(${verifyRes.error})_\n\n📌 *সমাধান:*\nগ্রাফ এপিআই এক্সপ্লোরারে (Graph API Explorer) টোকেন বক্সে ক্লিক করে কিবোর্ড থেকে *Ctrl + A* চেপে সম্পূর্ণ টোকেনটি সিলেক্ট করে কপি করুন, অথবা পাশে থাকা ছোট কপি আইকনটিতে চাপ দিন। এরপর পুরোটা এখানে পেস্ট করুন।`
+              );
+            } else {
+              this.sendMessage(
+                chatId,
+                `⚠️ *ফেসবুক টোকেন প্রত্যাখ্যান করেছে:*\n_${verifyRes.error}_\n\n📌 নিশ্চিত করুন গ্রাফ এপিআই এক্সপ্লোরারে *User or Page* ড্রপডাউনে *"WebPulse Automation"* সিলেক্ট করা আছে।`
+              );
+            }
+            return;
+          }
+
+          // Save to config.json
           const cfg = JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
           if (!cfg.facebook) cfg.facebook = {};
-          cfg.facebook.pageAccessToken = text;
+          cfg.facebook.pageAccessToken = cleanToken;
           fs.writeFileSync(this.configPath, JSON.stringify(cfg, null, 2), 'utf8');
-          this.sendMessage(chatId, '✅ *ধন্যবাদ বস!* আপনার নতুন ফেসবুক পেইজ টোকেন সফলভাবে সেভ করা হয়েছে। এখন আপনি পেজে সরাসরি পোস্ট করতে পারবেন!');
+
+          // CRITICAL: Update in-memory configuration so scheduler immediately uses it!
+          if (this.postScheduler && this.postScheduler.config) {
+            if (!this.postScheduler.config.facebook) this.postScheduler.config.facebook = {};
+            this.postScheduler.config.facebook.pageAccessToken = cleanToken;
+          }
+
+          this.sendMessage(
+            chatId,
+            `✅ *অভিনন্দন বস!* ফেসবুক পেইজ টোকেন সম্পূর্ণ ভেরিফাইড ও সক্রিয় হয়েছে! 🎉\n🏢 পেইজ: *${verifyRes.name}*\n\nএখন আপনি নিশ্চিন্তে ওপরের *[🚀 পেজে পোস্ট করো]* বাটনে চাপুন—পোস্ট সফলভাবে পাবলিশ হয়ে যাবে!`
+          );
           return;
         } catch (e) {
           console.warn('⚠️ Token save error:', e.message);
