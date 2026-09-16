@@ -1,0 +1,9 @@
+Order_ID,Timestamp,Customer_Name,Phone,Address,Channel,Grand_Total,Status
+"DEAL-436276","2026-09-15T13:53:56.679Z","01562289789","01562289789","Dhaka, Bangladesh","telegram-ai-negotiator","10000","Confirmed"
+"DEAL-154726","2026-09-15T07:09:15.133Z","তানভীর আহমেদ","01712345678","ধানমন্ডি ঢাকা","telegram-ai-negotiator","0","Confirmed"
+"ORD-531398","2026-09-15T06:25:31.812Z","সাকিব আল হাসান","01712345678","বাড়ি ১২, রোড ৫, গুলশান ২, ঢাকা","facebook-messenger","1520","Confirmed"
+"ORD-301858","2026-09-15T06:21:42.260Z","Rahim Chowdhury","01711223344","House 14, Road 8, Dhanmondi, Dhaka","facebook-messenger","2520","Confirmed"
+"ORD-076512","2026-09-15T06:18:17.314Z","Saiful Islam","01999887766","Uttara Sector 11, Dhaka","file-drop-watcher","2870","Confirmed"
+"ORD-047606","2026-09-15T06:18:17.311Z","Saiful Islam","01999887766","Uttara Sector 11, Dhaka","file-drop-watcher","2870","Confirmed"
+"ORD-041589","2026-09-15T06:17:21.991Z","Rahim Chowdhury","01711223344","House 14, Road 8, Dhanmondi, Dhaka","facebook-messenger","2520","Confirmed"
+"ORD-024317","2026-09-15T06:17:04.727Z","Rahim Chowdhury","01711223344","House 14, Road 8, Dhanmondi, Dhaka","facebook-messenger","2520","Confirmed"

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Deal Negotiator & Telegram Closer - Human-in-the-Loop</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Top Global Header -->
+    <header class="top-nav">
+      <div class="brand-title">
+        <span class="nav-logo">🤖</span>
+        <div>
+          <h2>AI Deal Negotiator & Sales Closer Bot</h2>
+          <p class="tagline">Human-in-the-Loop AI Automation • Powered by Telegram Decision Engine</p>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <span class="badge-status"><span class="dot"></span> লোকাল পিসি বট: সক্রিয়</span>
+        <button id="btnResetDemo" class="btn-reset">🔄 নতুন ডেমো শুরু করুন</button>
+      </div>
+    </header>
+
+    <!-- Presentation Explainer Banner for Teacher -->
+    <div class="teacher-banner">
+      <div class="banner-icon">💡</div>
+      <div class="banner-text">
+        <strong>স্যারের ধারণার চেয়েও এক ধাপ এগিয়ে:</strong> ক্লায়েন্ট ২৪ ঘণ্টা এআই-এর সাথে দামাদামি করবে, কিন্তু <strong>বাজেট ফাইনাল বা গুরুত্বপূর্ণ সিদ্ধান্তের সময় এআই স্বয়ংক্রিয়ভাবে আপনার টেলিগ্রামে পরামর্শ ও বাটন পাঠাবে</strong>। আপনি টেলিগ্রামে যে সিদ্ধান্ত দেবেন, এআই ঠিক সেভাবে ক্লায়েন্টকে ডিল ক্লোজ করবে!
+      </div>
+    </div>
+
+    <!-- Dual-Screen Arena -->
+    <div class="dual-arena">
+      <!-- LEFT SCREEN: Client Perspective (Facebook Messenger / Web Portal) -->
+      <div class="screen-panel client-panel">
+        <div class="panel-header client-header">
+          <div class="user-meta">
+            <div class="avatar client-avatar">👤</div>
+            <div>
+              <h3>ক্লায়েন্ট চ্যাট উইন্ডো (Client Portal)</h3>
+              <small class="live-label">● এআই সেলস অ্যাসিস্ট্যান্ট লাইভ কথা বলছে</small>
+            </div>
+          </div>
+          <span class="channel-chip">Messenger / Web</span>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div class="chat-container" id="clientChatBox">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- 1-Click Quick Demo Prompts -->
+        <div class="quick-prompts">
+          <span class="prompt-title">⚡ ১-ক্লিক টেস্ট প্রশ্নসমূহ (স্যারের সামনে দ্রুত ডেমো দিতে):</span>
+          <div class="prompt-chips">
+            <button class="chip" data-text="আমি একটি কাস্টম ই-কমার্স ওয়েবসাইট বানাতে চাই।">১. সার্ভিসের খোঁজ</button>
+            <button class="chip" data-text="আমার বাজেট ১৮,০০০ টাকা। এই বাজেটে কাজ করে দিতে পারবেন কি?">২. কম বাজেট অফার (১৮,০০০ ৳)</button>
+            <button class="chip" data-text="ঠিক আছে, ২২,০০০ টাকায় আমি রাজি। কনফার্ম করুন!">৩. কাউন্টারে সম্মতি প্রদান</button>
+            <button class="chip" data-text="তানভীর আহমেদ, 01712345678, ধানমন্ডি ঢাকা">৪. নাম ও ঠিকানা পাঠানো</button>
+          </div>
+        </div>
+
+        <!-- Client Input Form -->
+        <form id="clientInputForm" class="chat-input-bar">
+          <input type="text" id="clientTextInput" placeholder="ক্লায়েন্ট হিসেবে বাংলায় যেকোনো কথা বা বাজেট লিখে Enter চাপুন..." autocomplete="off" required>
+          <button type="submit" class="btn-send">পাঠান ➤</button>
+        </form>
+      </div>
+
+      <!-- RIGHT SCREEN: Telegram Smartphone Simulator (Owner Perspective) -->
+      <div class="screen-panel telegram-panel">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          
+          <!-- Telegram App Header -->
+          <div class="telegram-app-header">
+            <div class="tg-left">
+              <span class="tg-back">‹</span>
+              <div class="tg-bot-avatar">🤖</div>
+              <div class="tg-info">
+                <h4>AutoOrder AI Bot</h4>
+                <small>bot • Human-in-the-Loop Manager</small>
+              </div>
+            </div>
+            <div class="tg-dots">⋮</div>
+          </div>
+
+          <!-- Telegram Message Body -->
+          <div class="telegram-chat-body" id="tgChatBody">
+            <div class="tg-bubble bot-intro">
+              <p>👋 <strong>সালাম বস!</strong> আমি আপনার সার্বক্ষণিক এআই সেলস বট।</p>
+              <p>যেকোনো ক্লায়েন্ট মেসেজ দিলে আমি ডিল হ্যান্ডেল করব। বাজেট বা জরুরি সিদ্ধান্ত নেওয়ার সময় সরাসরি এখানে আপনাকে নোটিফাই করব।</p>
+              <span class="tg-time">10:00 AM</span>
+            </div>
+          </div>
+
+          <!-- Owner Telegram Custom Reply Box -->
+          <div class="telegram-input-bar">
+            <input type="text" id="tgOwnerInput" placeholder="বস, বটকে কোনো বিশেষ নির্দেশনা লিখুন..." autocomplete="off">
+            <button id="btnSendOwnerTg" class="btn-tg-send">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Closed Deals & Generated Invoices Drawer -->
+    <section class="deals-section">
+      <div class="section-header">
+        <h3>📋 সফলভাবে ক্লোজ হওয়া ডিল ও স্বয়ংক্রিয় ইনভয়েসসমূহ</h3>
+        <span class="badge-count" id="dealsCount">0 টি ডিল সম্পন্ন</span>
+      </div>
+      <div class="table-card">
+        <table class="deal-table">
+          <thead>
+            <tr>
+              <th>ডিল আইডি</th>
+              <th>ক্লায়েন্ট নাম</th>
+              <th>মোবাইল</th>
+              <th>প্রজেক্ট/সার্ভিস</th>
+              <th>চূড়ান্ত বাজেট</th>
+              <th>স্ট্যাটাস</th>
+              <th>অফিশিয়াল PDF মেমো</th>
+            </tr>
+          </thead>
+          <tbody id="dealsTableBody">
+            <tr>
+              <td colspan="7" class="empty-msg">এখনো কোনো ডিল ফাইনাল হয়নি। উপরের চ্যাটে ডিল শুরু করুন!</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

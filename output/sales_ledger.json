@@ -1,0 +1,233 @@
+[
+  {
+    "orderId": "DEAL-436276",
+    "createdAt": "2026-09-15T13:53:56.679Z",
+    "channel": "telegram-ai-negotiator",
+    "paymentMethod": "Advance / Milestone Payment",
+    "customer": {
+      "name": "01562289789",
+      "phone": "01562289789",
+      "address": "Dhaka, Bangladesh"
+    },
+    "items": [
+      {
+        "name": "কাস্টম ই-কমার্স ওয়েবসাইট ও বিজনেস অটোমেশন",
+        "price": 17500,
+        "quantity": 1
+      }
+    ],
+    "pricing": {
+      "subtotal": 17500,
+      "deliveryFee": 0,
+      "discount": 7500,
+      "grandTotal": 10000
+    },
+    "invoiceUrl": "/invoices/Invoice_DEAL-436276.pdf",
+    "notificationMessage": "সালাম 01562289789! 🌸\nআপনার অর্ডারটি #DEAL-436276 সফলভাবে গ্রহণ করা হয়েছে।\n\n📦 পণ্যের বিবরণ:\n• কাস্টম ই-কমার্স ওয়েবসাইট ও বিজনেস অটোমেশন (x1) - 17500 BDT\n\n💰 মোট প্রদেয় (ক্যাশ অন ডেলিভারি): 10000 BDT\n📍 ডেলিভারি ঠিকানা: Dhaka, Bangladesh\n\nআপনার ডিজিটাল মেমোটি ইতিমধ্যে প্রস্তুত করা হয়েছে। ডেলিভারি রাইডার পৌঁছানোর পূর্বে যোগাযোগ করবেন। ধন্যবাদ! ✨",
+    "processingTimeMs": 1712
+  },
+  {
+    "orderId": "DEAL-154726",
+    "createdAt": "2026-09-15T07:09:15.133Z",
+    "channel": "telegram-ai-negotiator",
+    "paymentMethod": "Advance / Milestone Payment",
+    "customer": {
+      "name": "তানভীর আহমেদ",
+      "phone": "01712345678",
+      "address": "ধানমন্ডি ঢাকা"
+    },
+    "items": [
+      {
+        "name": "কাস্টম ই-কমার্স ওয়েবসাইট ও সফটওয়্যার",
+        "price": 12500,
+        "quantity": 1
+      }
+    ],
+    "pricing": {
+      "subtotal": 12500,
+      "deliveryFee": 0,
+      "discount": 12500,
+      "grandTotal": 0
+    },
+    "invoiceUrl": "/invoices/Invoice_DEAL-154726.pdf",
+    "notificationMessage": "সালাম তানভীর আহমেদ! 🌸\nআপনার অর্ডারটি #DEAL-154726 সফলভাবে গ্রহণ করা হয়েছে।\n\n📦 পণ্যের বিবরণ:\n• কাস্টম ই-কমার্স ওয়েবসাইট ও সফটওয়্যার (x1) - 12500 BDT\n\n💰 মোট প্রদেয় (ক্যাশ অন ডেলিভারি): 0 BDT\n📍 ডেলিভারি ঠিকানা: ধানমন্ডি ঢাকা\n\nআপনার ডিজিটাল মেমোটি ইতিমধ্যে প্রস্তুত করা হয়েছে। ডেলিভারি রাইডার পৌঁছানোর পূর্বে যোগাযোগ করবেন। ধন্যবাদ! ✨",
+    "processingTimeMs": 1697
+  },
+  {
+    "orderId": "ORD-531398",
+    "createdAt": "2026-09-15T06:25:31.812Z",
+    "channel": "facebook-messenger",
+    "paymentMethod": "Cash On Delivery (COD)",
+    "customer": {
+      "name": "সাকিব আল হাসান",
+      "phone": "01712345678",
+      "address": "বাড়ি ১২, রোড ৫, গুলশান ২, ঢাকা"
+    },
+    "items": [
+      {
+        "name": "Wireless Bluetooth Earbuds Pro",
+        "price": 1450,
+        "quantity": 1
+      }
+    ],
+    "pricing": {
+      "subtotal": 1450,
+      "deliveryFee": 70,
+      "discount": 0,
+      "grandTotal": 1520
+    },
+    "invoiceUrl": "/invoices/Invoice_ORD-531398.pdf",
+    "notificationMessage": "সালাম সাকিব আল হাসান! 🌸\nআপনার অর্ডারটি #ORD-531398 সফলভাবে গ্রহণ করা হয়েছে।\n\n📦 পণ্যের বিবরণ:\n• Wireless Bluetooth Earbuds Pro (x1) - 1450 BDT\n\n💰 মোট প্রদেয় (ক্যাশ অন ডেলিভারি): 1520 BDT\n📍 ডেলিভারি ঠিকানা: বাড়ি ১২, রোড ৫, গুলশান ২, ঢাকা\n\nআপনার ডিজিটাল মেমোটি ইতিমধ্যে প্রস্তুত করা হয়েছে। ডেলিভারি রাইডার পৌঁছানোর পূর্বে যোগাযোগ করবেন। ধন্যবাদ! ✨",
+    "processingTimeMs": 1709
+  },
+  {
+    "orderId": "ORD-301858",
+    "createdAt": "2026-09-15T06:21:42.260Z",
+    "channel": "facebook-messenger",
+    "paymentMethod": "Cash On Delivery (COD)",
+    "customer": {
+      "name": "Rahim Chowdhury",
+      "phone": "01711223344",
+      "address": "House 14, Road 8, Dhanmondi, Dhaka"
+    },
+    "items": [
+      {
+        "name": "Premium Leather Wallet",
+        "price": 1150,
+        "quantity": 1
+      },
+      {
+        "name": "Cotton Casual T-Shirt",
+        "price": 650,
+        "quantity": 2
+      }
+    ],
+    "pricing": {
+      "subtotal": 2450,
+      "deliveryFee": 70,
+      "discount": 0,
+      "grandTotal": 2520
+    },
+    "invoiceUrl": "/invoices/Invoice_ORD-301858.pdf",
+    "notificationMessage": "সালাম Rahim Chowdhury! 🌸\nআপনার অর্ডারটি #ORD-301858 সফলভাবে গ্রহণ করা হয়েছে।\n\n📦 পণ্যের বিবরণ:\n• Premium Leather Wallet (x1) - 1150 BDT\n• Cotton Casual T-Shirt (x2) - 1300 BDT\n\n💰 মোট প্রদেয় (ক্যাশ অন ডেলিভারি): 2520 BDT\n📍 ডেলিভারি ঠিকানা: House 14, Road 8, Dhanmondi, Dhaka\n\nআপনার ডিজিটাল মেমোটি ইতিমধ্যে প্রস্তুত করা হয়েছে। ডেলিভারি রাইডার পৌঁছানোর পূর্বে যোগাযোগ করবেন। ধন্যবাদ! ✨",
+    "processingTimeMs": 1681
+  },
+  {
+    "orderId": "ORD-076512",
+    "createdAt": "2026-09-15T06:18:17.314Z",
+    "channel": "file-drop-watcher",
+    "paymentMethod": "Cash On Delivery (COD)",
+    "customer": {
+      "name": "Saiful Islam",
+      "phone": "01999887766",
+      "address": "Uttara Sector 11, Dhaka"
+    },
+    "items": [
+      {
+        "name": "Bluetooth Smartwatch V3",
+        "price": 2800,
+        "quantity": 1
+      }
+    ],
+    "pricing": {
+      "subtotal": 2800,
+      "deliveryFee": 70,
+      "discount": 0,
+      "grandTotal": 2870
+    },
+    "invoiceUrl": "/invoices/Invoice_ORD-076512.pdf",
+    "notificationMessage": "সালাম Saiful Islam! 🌸\nআপনার অর্ডারটি #ORD-076512 সফলভাবে গ্রহণ করা হয়েছে।\n\n📦 পণ্যের বিবরণ:\n• Bluetooth Smartwatch V3 (x1) - 2800 BDT\n\n💰 মোট প্রদেয় (ক্যাশ অন ডেলিভারি): 2870 BDT\n📍 ডেলিভারি ঠিকানা: Uttara Sector 11, Dhaka\n\nআপনার ডিজিটাল মেমোটি ইতিমধ্যে প্রস্তুত করা হয়েছে। ডেলিভারি রাইডার পৌঁছানোর পূর্বে যোগাযোগ করবেন। ধন্যবাদ! ✨",
+    "processingTimeMs": 1709
+  },
+  {
+    "orderId": "ORD-047606",
+    "createdAt": "2026-09-15T06:18:17.311Z",
+    "channel": "file-drop-watcher",
+    "paymentMethod": "Cash On Delivery (COD)",
+    "customer": {
+      "name": "Saiful Islam",
+      "phone": "01999887766",
+      "address": "Uttara Sector 11, Dhaka"
+    },
+    "items": [
+      {
+        "name": "Bluetooth Smartwatch V3",
+        "price": 2800,
+        "quantity": 1
+      }
+    ],
+    "pricing": {
+      "subtotal": 2800,
+      "deliveryFee": 70,
+      "discount": 0,
+      "grandTotal": 2870
+    },
+    "invoiceUrl": "/invoices/Invoice_ORD-047606.pdf",
+    "notificationMessage": "সালাম Saiful Islam! 🌸\nআপনার অর্ডারটি #ORD-047606 সফলভাবে গ্রহণ করা হয়েছে।\n\n📦 পণ্যের বিবরণ:\n• Bluetooth Smartwatch V3 (x1) - 2800 BDT\n\n💰 মোট প্রদেয় (ক্যাশ অন ডেলিভারি): 2870 BDT\n📍 ডেলিভারি ঠিকানা: Uttara Sector 11, Dhaka\n\nআপনার ডিজিটাল মেমোটি ইতিমধ্যে প্রস্তুত করা হয়েছে। ডেলিভারি রাইডার পৌঁছানোর পূর্বে যোগাযোগ করবেন। ধন্যবাদ! ✨",
+    "processingTimeMs": 1707
+  },
+  {
+    "orderId": "ORD-041589",
+    "createdAt": "2026-09-15T06:17:21.991Z",
+    "channel": "facebook-messenger",
+    "paymentMethod": "Cash On Delivery (COD)",
+    "customer": {
+      "name": "Rahim Chowdhury",
+      "phone": "01711223344",
+      "address": "House 14, Road 8, Dhanmondi, Dhaka"
+    },
+    "items": [
+      {
+        "name": "Premium Leather Wallet",
+        "price": 1150,
+        "quantity": 1
+      },
+      {
+        "name": "Cotton Casual T-Shirt",
+        "price": 650,
+        "quantity": 2
+      }
+    ],
+    "pricing": {
+      "subtotal": 2450,
+      "deliveryFee": 70,
+      "discount": 0,
+      "grandTotal": 2520
+    },
+    "invoiceUrl": "/invoices/Invoice_ORD-041589.pdf",
+    "notificationMessage": "সালাম Rahim Chowdhury! 🌸\nআপনার অর্ডারটি #ORD-041589 সফলভাবে গ্রহণ করা হয়েছে।\n\n📦 পণ্যের বিবরণ:\n• Premium Leather Wallet (x1) - 1150 BDT\n• Cotton Casual T-Shirt (x2) - 1300 BDT\n\n💰 মোট প্রদেয় (ক্যাশ অন ডেলিভারি): 2520 BDT\n📍 ডেলিভারি ঠিকানা: House 14, Road 8, Dhanmondi, Dhaka\n\nআপনার ডিজিটাল মেমোটি ইতিমধ্যে প্রস্তুত করা হয়েছে। ডেলিভারি রাইডার পৌঁছানোর পূর্বে যোগাযোগ করবেন। ধন্যবাদ! ✨",
+    "processingTimeMs": 1700
+  },
+  {
+    "orderId": "ORD-024317",
+    "createdAt": "2026-09-15T06:17:04.727Z",
+    "channel": "facebook-messenger",
+    "paymentMethod": "Cash On Delivery (COD)",
+    "customer": {
+      "name": "Rahim Chowdhury",
+      "phone": "01711223344",
+      "address": "House 14, Road 8, Dhanmondi, Dhaka"
+    },
+    "items": [
+      {
+        "name": "Premium Leather Wallet",
+        "price": 1150,
+        "quantity": 1
+      },
+      {
+        "name": "Cotton Casual T-Shirt",
+        "price": 650,
+        "quantity": 2
+      }
+    ],
+    "pricing": {
+      "subtotal": 2450,
+      "deliveryFee": 70,
+      "discount": 0,
+      "grandTotal": 2520
+    },
+    "invoiceUrl": "/invoices/Invoice_ORD-024317.pdf",
+    "notificationMessage": "সালাম Rahim Chowdhury! 🌸\nআপনার অর্ডারটি #ORD-024317 সফলভাবে গ্রহণ করা হয়েছে।\n\n📦 পণ্যের বিবরণ:\n• Premium Leather Wallet (x1) - 1150 BDT\n• Cotton Casual T-Shirt (x2) - 1300 BDT\n\n💰 মোট প্রদেয় (ক্যাশ অন ডেলিভারি): 2520 BDT\n📍 ডেলিভারি ঠিকানা: House 14, Road 8, Dhanmondi, Dhaka\n\nআপনার ডিজিটাল মেমোটি ইতিমধ্যে প্রস্তুত করা হয়েছে। ডেলিভারি রাইডার পৌঁছানোর পূর্বে যোগাযোগ করবেন। ধন্যবাদ! ✨",
+    "processingTimeMs": 1721
+  }
+]

@@ -1,0 +1,604 @@
+:root {
+  --primary: #2563eb;
+  --tg-header: #2481cc;
+  --tg-bg: #8c9fa8;
+  --tg-btn: #3390ec;
+  --tg-bubble: #ffffff;
+  --client-bubble: #e0f2fe;
+  --bot-bubble: #ffffff;
+  --border: #e2e8f0;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Hind Siliguri', 'Inter', -apple-system, sans-serif;
+  background-color: #0f172a;
+  color: #1e293b;
+  line-height: 1.5;
+  padding: 16px;
+}
+
+.app-wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Global Navbar */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e293b;
+  padding: 14px 24px;
+  border-radius: var(--radius);
+  color: white;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.brand-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-logo {
+  font-size: 2rem;
+  background: #3b82f6;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.brand-title h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.tagline {
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.badge-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+.btn-reset {
+  background: #334155;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.btn-reset:hover {
+  background: #475569;
+}
+
+/* Explainer Banner */
+.teacher-banner {
+  background: linear-gradient(90deg, #1e3a8a, #1e40af);
+  border-left: 4px solid #38bdf8;
+  padding: 12px 20px;
+  border-radius: 10px;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.95rem;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+.banner-icon {
+  font-size: 1.8rem;
+}
+
+/* Dual-Screen Arena */
+.dual-arena {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+  .dual-arena {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Panel Containers */
+.screen-panel {
+  background: #ffffff;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  height: 640px;
+}
+
+/* LEFT: Client Panel */
+.client-header {
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border);
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.client-avatar {
+  width: 40px;
+  height: 40px;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+
+.user-meta h3 {
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+.live-label {
+  color: #10b981;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.channel-chip {
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #bfdbfe;
+}
+
+.chat-container {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #f8fafc;
+}
+
+.chat-bubble {
+  max-width: 82%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+  position: relative;
+}
+
+.chat-bubble.client {
+  align-self: flex-end;
+  background: #2563eb;
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+
+.chat-bubble.bot {
+  align-self: flex-start;
+  background: white;
+  color: #1e293b;
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 2px;
+}
+
+.chat-bubble .bubble-time {
+  display: block;
+  font-size: 0.7rem;
+  margin-top: 4px;
+  opacity: 0.75;
+  text-align: right;
+}
+
+.chat-bubble.client .bubble-time {
+  color: #e0e7ff;
+}
+
+.chat-bubble.bot .bubble-time {
+  color: #64748b;
+}
+
+/* Quick Prompts */
+.quick-prompts {
+  padding: 8px 14px;
+  background: #f1f5f9;
+  border-top: 1px solid var(--border);
+}
+
+.prompt-title {
+  display: block;
+  font-size: 0.74rem;
+  color: #64748b;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.prompt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  background: white;
+  border: 1px solid #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.chip:hover {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.chat-input-bar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px;
+  background: white;
+  border-top: 1px solid var(--border);
+}
+
+.chat-input-bar input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  outline: none;
+}
+.chat-input-bar input:focus {
+  border-color: var(--primary);
+}
+
+.btn-send {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-send:hover {
+  background: #1d4ed8;
+}
+
+/* RIGHT: Telegram Phone Frame */
+.telegram-panel {
+  background: #1e293b;
+  padding: 10px;
+}
+
+.phone-frame {
+  flex: 1;
+  background: #8496a0; /* Classic Telegram pattern bg tint */
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.1);
+  position: relative;
+}
+
+.phone-notch {
+  width: 100px;
+  height: 10px;
+  background: #0f172a;
+  border-radius: 0 0 10px 10px;
+  margin: 0 auto;
+}
+
+.telegram-app-header {
+  background: var(--tg-header);
+  color: white;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tg-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tg-back {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.tg-bot-avatar {
+  width: 36px;
+  height: 36px;
+  background: white;
+  color: var(--tg-header);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.tg-info h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+.tg-info small {
+  font-size: 0.72rem;
+  opacity: 0.85;
+}
+
+.tg-chat-body {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #738a9c;
+}
+
+/* Telegram Bubbles */
+.tg-bubble {
+  background: white;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  max-width: 90%;
+  color: #1e293b;
+  position: relative;
+  align-self: flex-start;
+}
+
+.tg-bubble.alert-bubble {
+  border-left: 4px solid #ef4444;
+  background: #fffbeb;
+}
+
+.tg-bubble.deal-closed-bubble {
+  border-left: 4px solid #10b981;
+  background: #ecfdf5;
+}
+
+.tg-time {
+  display: block;
+  font-size: 0.68rem;
+  color: #94a3b8;
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Inline Keyboard in Telegram */
+.tg-inline-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.tg-row {
+  display: flex;
+  gap: 6px;
+}
+
+.tg-btn {
+  flex: 1;
+  background: #f0f7ff;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  text-align: center;
+}
+.tg-btn:hover {
+  background: #0284c7;
+  color: white;
+}
+
+.tg-btn.btn-accept {
+  background: #ecfdf5;
+  color: #059669;
+  border-color: #a7f3d0;
+}
+.tg-btn.btn-accept:hover {
+  background: #059669;
+  color: white;
+}
+
+.tg-btn.btn-reject {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+.tg-btn.btn-reject:hover {
+  background: #dc2626;
+  color: white;
+}
+
+.telegram-input-bar {
+  background: #ffffff;
+  padding: 8px 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.telegram-input-bar input {
+  flex: 1;
+  border: 1px solid #cbd5e1;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.btn-tg-send {
+  background: var(--tg-btn);
+  color: white;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+/* Deals Section */
+.deals-section {
+  background: #1e293b;
+  border-radius: var(--radius);
+  padding: 20px;
+  color: white;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.badge-count {
+  background: #334155;
+  color: #38bdf8;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.deal-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.deal-table th {
+  background: #0f172a;
+  padding: 12px;
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+.deal-table td {
+  padding: 12px;
+  border-bottom: 1px solid #334155;
+  color: #f8fafc;
+}
+
+.empty-msg {
+  text-align: center;
+  padding: 24px !important;
+  color: #64748b;
+}
+
+.btn-memo {
+  background: #ef4444;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-memo:hover {
+  background: #dc2626;
+}
+
+.status-badge-green {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

@@ -1,0 +1,7 @@
+﻿node_modules/
+cloudflared.exe
+.env
+output/invoices/*.pdf
+data/incoming/*
+data/processed/*
+*.log

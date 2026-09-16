@@ -1,0 +1,17 @@
+{
+  "name": "ecommerce-order-automation",
+  "version": "1.0.0",
+  "description": "Smart E-Commerce Order and Invoice Automation System",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "localtunnel": "^2.0.2",
+    "pdfkit": "^0.15.2",
+    "qrcode": "^1.5.4"
+  }
+}

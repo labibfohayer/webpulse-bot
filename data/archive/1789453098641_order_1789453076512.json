@@ -1,0 +1,16 @@
+{
+  "orderId": "ORD-076512",
+  "channel": "file-drop-watcher",
+  "customer": {
+    "name": "Saiful Islam",
+    "phone": "01999887766",
+    "address": "Uttara Sector 11, Dhaka"
+  },
+  "items": [
+    {
+      "name": "Bluetooth Smartwatch V3",
+      "price": 2800,
+      "quantity": 1
+    }
+  ]
+}

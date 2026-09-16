@@ -1,0 +1,22 @@
+{
+  "businessName": "WebPulse Automation",
+  "chairman": "লাবিব ফোহায়ের",
+  "managingDirector": "জায়ান আরহাম",
+  "businessPhone": "+8801700000000",
+  "businessEmail": "deal@smartagencybd.com",
+  "businessAddress": "Level 4, IT Park, Dhaka, Bangladesh",
+  "currency": "BDT",
+  "defaultDeliveryFee": 0,
+  "vatPercentage": 0,
+  "facebook": {
+    "verifyToken": "MY_FB_SECRET_VERIFY_TOKEN_123",
+    "pageAccessToken": "EAAWYS2TZCkl0BSX4KuMpibpfhx2Bz5kwqT3aXzvZCb9DeLhOhr0li8SFjNdjdSNwiBDDUuSbbxnpLHQw2BXoI3VQUWeIBsZASG4yVzFOMqWGTdEB7oZAGXSar2DQLYt4Vy2l2nyRo4eyVVekF5Xu3S1nz9e8jZCixZABib73GCrKMTpUGeL3ZBZBNT7QV6mQ0OpdNtsZBZCT3cVAZDZD",
+    "pageId": "1240526229154048",
+    "appSecret": ""
+  },
+  "telegram": {
+    "botToken": "8746325618:AAHLKzCLFHCEbSU9KzehZC3o4gcGeusXmvU",
+    "chatId": "7036605067"
+  },
+  "geminiApiKey": "AQ.Ab8RN6LMprZWqQrbAasixLnfXbtDUzlVgGS-3YcGT6KHJs81yA"
+}
