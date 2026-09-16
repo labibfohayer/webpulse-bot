@@ -47,12 +47,31 @@ function downloadFile(url, destPath) {
   });
 }
 
+const { MsEdgeTTS, OUTPUT_FORMAT } = require('msedge-tts');
+
 async function synthesizeBengaliAudio(scriptText, outputPath) {
   const cleanedText = scriptText
     .replace(/[#*_\n\r]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
+  try {
+    console.log('🎙️ [Video AI] Generating deep, authoritative Bengali male voice (bn-BD-PradeepNeural)...');
+    const tts = new MsEdgeTTS();
+    await tts.setMetadata('bn-BD-PradeepNeural', OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3);
+    const tempDir = path.dirname(outputPath);
+    const tempOutput = await tts.toFile(tempDir, cleanedText);
+    if (tempOutput?.audioFilePath && fs.existsSync(tempOutput.audioFilePath)) {
+      if (tempOutput.audioFilePath !== outputPath) {
+        fs.renameSync(tempOutput.audioFilePath, outputPath);
+      }
+      return outputPath;
+    }
+  } catch (err) {
+    console.warn('⚠️ Edge TTS Male voice fallback to google-tts:', err.message);
+  }
+
+  // Fallback to Google TTS
   const chunks = await googleTTS.getAllAudioBase64(cleanedText, {
     lang: 'bn',
     slow: false,
@@ -66,14 +85,14 @@ async function synthesizeBengaliAudio(scriptText, outputPath) {
 
 function renderVideo(imagePath, audioPath, outputPath) {
   return new Promise((resolve, reject) => {
+    // Dynamic 25fps cinematic continuous zoom & camera motion across the high-tech visual
     const args = [
       '-y',
       '-loop', '1',
       '-i', imagePath,
       '-i', audioPath,
-      '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+      '-vf', 'zoompan=z=\'min(zoom+0.0012,1.25)\':d=750:x=\'iw/2-(iw/zoom/2)\':y=\'ih/2-(ih/zoom/2)\':s=1280x720:fps=25',
       '-c:v', 'libx264',
-      '-tune', 'stillimage',
       '-c:a', 'aac',
       '-b:a', '128k',
       '-pix_fmt', 'yuv420p',

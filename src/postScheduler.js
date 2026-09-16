@@ -106,23 +106,20 @@ class PostSchedulerService {
     };
 
     if (draft.isVideo) {
-      const videoHeader = 
-        `🎬 *[নতুন ফেসবুক এআই ভিডিও ড্রাফট]* 🚀\n` +
-        `📌 *বিষয়:* ${draft.topic}\n` +
-        `🎙️ *ভয়েসওভার:* ${draft.voiceoverScript}\n\n` +
-        `📝 *ক্যাপশন:*\n${draft.caption}\n\n` +
-        `────────────────────────\n` +
-        `স্যার, ভিডিওটি প্লে করে শুনুন। এটি পেজে পোস্ট করতে নিচের বাটনে চাপুন:`;
-
       console.log(`📲 [Telegram] Sending video draft to Owner (${draft.videoPath})...`);
-      const sent = await this.sendVideo(chatId, draft.videoPath, `🎬 ${draft.topic} (WebPulse Automation Video)`, inlineKeyboard);
-      if (!sent) {
-        // Fallback: send photo and message if direct video upload had network hiccup
-        await this.sendPhoto(chatId, draft.imageUrl, `🖼️ ভিডিও ব্যানার প্রিভিউ`);
-        await this.sendMessageWithButtons(chatId, videoHeader, inlineKeyboard);
-      } else {
-        await this.sendMessageWithButtons(chatId, `📝 *প্রস্তাবিত ফেসবুক পোস্ট ক্যাপশন:*\n\n${draft.caption}`, null);
-      }
+
+      const fullVideoCaption = 
+        `🎬 *[নতুন ফেসবুক এআই ভিডিও ড্রাফট]* 🚀\n` +
+        `📌 *বিষয়:* ${draft.topic}\n\n` +
+        `📝 *প্রস্তাবিত ফেসবুক ক্যাপশন:*\n${draft.caption}\n\n` +
+        `────────────────────────\n` +
+        `স্যার, ভিডিওটি প্লে করে শুনুন এবং ওপরের ক্যাপশনটি দেখুন। পেজে পোস্ট করতে নিচের বাটনে চাপুন:`;
+
+      // Send the playable video
+      await this.sendVideo(chatId, draft.videoPath, `🎬 ${draft.topic} (WebPulse Automation Video)`);
+
+      // Send the Full Caption with Action Buttons
+      await this.sendMessageWithButtons(chatId, fullVideoCaption, inlineKeyboard);
     } else {
       const previewHeader = 
         `📢 *[নতুন ফেসবুক পোস্ট ড্রাফট]* 🚀\n` +
