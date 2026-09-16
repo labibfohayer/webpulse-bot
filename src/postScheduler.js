@@ -1,4 +1,4 @@
-﻿const https = require('https');
+const https = require('https');
 const { generatePostDraft, CONTENT_PILLARS } = require('./contentGenerator');
 const { publishToFacebook } = require('./postPublisher');
 
@@ -12,9 +12,10 @@ class PostSchedulerService {
   }
 
   start() {
-    console.log('📅 [Social Media AI Scheduler] Activated. Auto-scheduling 5 posts per day.');
-    // Check every hour for scheduled times (9 AM, 12 PM, 3 PM, 6 PM, 9 PM)
-    this.timer = setInterval(() => this.checkSchedule(), 60 * 60 * 1000);
+    console.log('📅 [Social Media AI Scheduler] Activated. Auto-scheduling at Bangladesh peak times.');
+    // Check every 15 minutes for BD peak times
+    this.lastTriggeredHour = -1;
+    this.timer = setInterval(() => this.checkSchedule(), 15 * 60 * 1000);
   }
 
   stop() {
@@ -22,10 +23,32 @@ class PostSchedulerService {
   }
 
   checkSchedule() {
-    const currentHour = new Date().getHours();
-    const scheduledHours = [9, 12, 15, 18, 21];
-    if (scheduledHours.includes(currentHour)) {
-      console.log(`⏰ [Social Media AI] Scheduled hour (${currentHour}:00) reached. Drafting new post...`);
+    // Get Bangladesh Time (Asia/Dhaka)
+    const bdTimeStr = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Dhaka',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    }).format(new Date());
+
+    const [hour, minute] = bdTimeStr.split(':').map(Number);
+    
+    // 5 Strategic Bangladesh Peak Engagement Hours:
+    // 1. 09:00 AM - Morning Catch-up
+    // 2. 01:15 PM - Lunch Break & Mid-day Rest
+    // 3. 05:45 PM - Evening Commute & Tea Time
+    // 4. 08:45 PM - Prime Family/Social Peak
+    // 5. 10:45 PM - Bedtime Browsing Peak
+    const isTargetTime = 
+      (hour === 9 && minute < 15) ||
+      (hour === 13 && minute >= 15 && minute < 30) ||
+      (hour === 17 && minute >= 45) ||
+      (hour === 20 && minute >= 45) ||
+      (hour === 22 && minute >= 45);
+
+    if (isTargetTime && this.lastTriggeredHour !== hour) {
+      this.lastTriggeredHour = hour;
+      console.log(`⏰ [Social Media AI] BD Peak Time reached (${bdTimeStr}). Drafting new post...`);
       this.triggerNewDraft();
     }
   }
