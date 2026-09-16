@@ -1,4 +1,4 @@
-﻿const { askGemini } = require('./geminiClient');
+const { askGemini } = require('./geminiClient');
 
 const CONTENT_PILLARS = [
   {
@@ -50,12 +50,18 @@ Company details:
 - Contact: Inbox page or WhatsApp: +8801700000000.
 
 Guidelines:
-1. Write in compelling, high-converting, professional Bengali (বাংলা).
-2. Include an attention-grabbing hook at the beginning.
-3. Use clean emojis and bullet points for readability.
-4. End with a strong Call-to-Action (CTA) encouraging clients to inbox the page.
-5. Include 4-5 relevant hashtags (e.g. #WebPulseAutomation #BusinessGrowth #EcommerceWebsite #AutomationBD #DigitalBangladesh).
-6. Output ONLY the ready-to-publish post caption text, nothing else (no explanations).`;
+1. Write in rich, highly engaging, polished, and comprehensive Bengali (বাংলা).
+2. Structure of the post:
+   - 🎯 Powerful hook sentence that stops users scrolling
+   - 💡 Explanation of the common problem entrepreneurs face in Bangladesh
+   - 🚀 How WebPulse Automation provides the ultimate tech solution
+   - ✨ 4 to 6 clear bullet points detailing key features, benefits, speed & free support guarantees
+   - 🤝 Mention leadership (মাননীয় চেয়ারম্যান জনাব লাবিব ফোহায়ের এবং ম্যানেজিং ডিরেক্টর জনাব জায়ান আরহাম) if relevant to special offers or vision
+   - 🎁 Special offer or limited-time consultation call-out
+   - 📞 Clear Call to Action (ইনবক্স করুন অথবা হোয়াটসঅ্যাপে যোগাযোগ করুন: +8801700000000)
+   - 🏷️ 5-6 trending hashtags (#WebPulseAutomation #BusinessGrowth #EcommerceWebsite #AIAutomation #DigitalBangladesh)
+3. CRITICAL: NEVER cut off or stop mid-sentence. The post must be fully completed and well-rounded from headline to hashtags.
+4. Output ONLY the complete, ready-to-publish post caption text, nothing else (no introductory or conversational remarks).`;
 
   let userPrompt = '';
   if (feedback && currentCaption) {
