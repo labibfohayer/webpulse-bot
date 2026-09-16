@@ -196,4 +196,16 @@ app.listen(PORT, () => {
   console.log(`🌐 Control Center & Dual Simulator: http://localhost:${PORT}`);
   console.log(`📱 Telegram Bot Mode: Ready for real token or screen simulator`);
   console.log(`================================================================\n`);
+
+  // Auto Keep-Alive for 24/7 Free Cloud Hosting (Render)
+  if (process.env.RENDER_EXTERNAL_URL) {
+    const pingUrl = `${process.env.RENDER_EXTERNAL_URL}/api/config`;
+    console.log(`⏱️ [Keep-Alive] Active for 24/7 free cloud uptime: ${pingUrl}`);
+    setInterval(() => {
+      const client = pingUrl.startsWith('https') ? https : http;
+      client.get(pingUrl, () => {
+        console.log(`💓 [Keep-Alive] 24/7 Heartbeat ping sent.`);
+      }).on('error', () => {});
+    }, 9 * 60 * 1000); // every 9 minutes (Render sleeps at 15 mins)
+  }
 });
