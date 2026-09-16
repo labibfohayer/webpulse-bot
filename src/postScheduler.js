@@ -225,7 +225,8 @@ class PostSchedulerService {
   sendMessageWithButtons(chatId, text, replyMarkup) {
     return new Promise((resolve) => {
       const sendReq = (useMarkdown) => {
-        const payload = { chat_id: chatId, text: text, reply_markup: replyMarkup };
+        const payload = { chat_id: chatId, text: text };
+        if (replyMarkup) payload.reply_markup = replyMarkup;
         if (useMarkdown) payload.parse_mode = 'Markdown';
         const data = JSON.stringify(payload);
         const req = https.request({
