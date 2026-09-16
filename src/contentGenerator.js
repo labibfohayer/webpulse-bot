@@ -23,10 +23,70 @@ const CONTENT_PILLARS = [
   }
 ];
 
-function getDynamicImageUrl(topicTitle) {
-  const seed = Date.now() + Math.floor(Math.random() * 100000);
-  const promptText = encodeURIComponent(`modern futuristic 3D digital technology banner for ${topicTitle}, cyber glowing holographic interface, sleek corporate branding, business growth, high resolution 4k wallpaper`);
-  return `https://image.pollinations.ai/prompt/${promptText}?width=1200&height=900&seed=${seed}&nologo=true`;
+const BANNER_COLLECTIONS = {
+  ecommerce: [
+    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80'
+  ],
+  chatbot: [
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80'
+  ],
+  corporate: [
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80'
+  ],
+  growth: [
+    'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80'
+  ],
+  support: [
+    'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80'
+  ]
+};
+
+const CATEGORY_KEYS = ['ecommerce', 'chatbot', 'corporate', 'growth', 'support'];
+const recentlyUsedImages = new Set();
+
+function getDynamicImageUrl(topicIndex) {
+  const categoryKey = CATEGORY_KEYS[topicIndex % CATEGORY_KEYS.length];
+  const pool = BANNER_COLLECTIONS[categoryKey] || BANNER_COLLECTIONS.ecommerce;
+  
+  // Filter out recently used images to guarantee fresh photos
+  const available = pool.filter(url => !recentlyUsedImages.has(url));
+  const chosenPool = available.length > 0 ? available : pool;
+  
+  const selectedUrl = chosenPool[Math.floor(Math.random() * chosenPool.length)];
+  recentlyUsedImages.add(selectedUrl);
+  if (recentlyUsedImages.size > 15) {
+    const firstAdded = recentlyUsedImages.values().next().value;
+    recentlyUsedImages.delete(firstAdded);
+  }
+
+  return selectedUrl;
 }
 
 async function generatePostDraft(topicIndex = null, feedback = null, currentCaption = null, apiKey) {
@@ -35,7 +95,7 @@ async function generatePostDraft(topicIndex = null, feedback = null, currentCapt
     : Math.floor(Math.random() * CONTENT_PILLARS.length);
 
   const pillar = CONTENT_PILLARS[index];
-  const imageUrl = getDynamicImageUrl(pillar.topic);
+  const imageUrl = getDynamicImageUrl(index);
 
   const systemPrompt = `You are the lead social media strategist and copywriter for WebPulse Automation, an elite software and digital automation agency in Bangladesh.
 Company details:
