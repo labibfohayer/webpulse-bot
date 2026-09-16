@@ -205,6 +205,22 @@ app.get('/api/posts/pending', (req, res) => {
   res.json({ pendingDraft: postScheduler.pendingDraft });
 });
 
+app.get('/privacy', (req, res) => {
+  res.send(`<!DOCTYPE html>
+<html>
+<head><title>Privacy Policy - WebPulse Automation</title></head>
+<body style="font-family:sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.6">
+  <h1>Privacy Policy for WebPulse Automation</h1>
+  <p>Last updated: September 16, 2026</p>
+  <p>WebPulse Automation operates AI customer service and social media automation services for business growth.</p>
+  <h2>Information Collection and Use</h2>
+  <p>We do not sell, rent, or share any personal user data. Data collected is strictly used to fulfill customer inquiries and automated post publishing on authorized Facebook pages.</p>
+  <h2>Contact</h2>
+  <p>If you have any questions regarding this Privacy Policy, contact us at deal@smartagencybd.com.</p>
+</body>
+</html>`);
+});
+
 app.listen(PORT, () => {
   console.log(`\n================================================================`);
   console.log(`🚀 AI DEAL NEGOTIATOR & TELEGRAM HUMAN-IN-THE-LOOP BOT IS LIVE!`);
