@@ -1,5 +1,6 @@
 const https = require('https');
 const { generatePostDraft, CONTENT_PILLARS } = require('./contentGenerator');
+const { generateVideoDraft } = require('./videoGenerator');
 const { publishToFacebook } = require('./postPublisher');
 
 class PostSchedulerService {
@@ -34,11 +35,11 @@ class PostSchedulerService {
     const [hour, minute] = bdTimeStr.split(':').map(Number);
     
     // 5 Strategic Bangladesh Peak Engagement Hours:
-    // 1. 09:00 AM - Morning Catch-up
-    // 2. 01:15 PM - Lunch Break & Mid-day Rest
-    // 3. 05:45 PM - Evening Commute & Tea Time
-    // 4. 08:45 PM - Prime Family/Social Peak
-    // 5. 10:45 PM - Bedtime Browsing Peak
+    // 1. 09:00 AM - Morning Catch-up (4K Photo Banner)
+    // 2. 01:15 PM - Lunch Break Video/Reels (30-45s AI Bengali Video)
+    // 3. 05:45 PM - Evening Commute & Tea Time (4K Photo Banner)
+    // 4. 08:45 PM - Prime Evening Video/Reels (30-45s AI Bengali Video)
+    // 5. 10:45 PM - Bedtime Browsing (4K Photo Banner)
     const isTargetTime = 
       (hour === 9 && minute < 15) ||
       (hour === 13 && minute >= 15 && minute < 30) ||
@@ -48,12 +49,13 @@ class PostSchedulerService {
 
     if (isTargetTime && this.lastTriggeredHour !== hour) {
       this.lastTriggeredHour = hour;
-      console.log(`⏰ [Social Media AI] BD Peak Time reached (${bdTimeStr}). Drafting new post...`);
-      this.triggerNewDraft();
+      const isVideoTime = (hour === 13 || hour === 20);
+      console.log(`⏰ [Social Media AI] BD Peak Time reached (${bdTimeStr}). Drafting new ${isVideoTime ? 'VIDEO' : 'POST'}...`);
+      this.triggerNewDraft(null, isVideoTime);
     }
   }
 
-  async triggerNewDraft(feedback = null) {
+  async triggerNewDraft(feedback = null, forceVideo = false) {
     const ownerChatId = this.tg.ownerChatId || this.config.telegram?.chatId;
     if (!ownerChatId) {
       console.warn('⚠️ [Social Media AI] No owner Telegram Chat ID registered yet.');
@@ -63,40 +65,39 @@ class PostSchedulerService {
     const apiKey = this.config.geminiApiKey || process.env.GEMINI_API_KEY;
 
     try {
-      this.tg.sendMessage(ownerChatId, '🤖 *স্যার, আমি WebPulse Automation-এর জন্য একটি নতুন পোস্ট ড্রাফট করছি...* এক মুহূর্ত অনুগ্রহ করে অপেক্ষা করুন।');
-
-      const draft = await generatePostDraft(
-        this.currentTopicIndex,
-        feedback,
-        this.pendingDraft ? this.pendingDraft.caption : null,
-        apiKey
-      );
-
-      this.pendingDraft = draft;
-      this.currentTopicIndex = (this.currentTopicIndex + 1) % CONTENT_PILLARS.length;
-
-      await this.sendDraftToOwner(ownerChatId, draft);
-      return draft;
+      if (forceVideo) {
+        this.tg.sendMessage(ownerChatId, '🎬 *স্যার, আমি WebPulse Automation-এর জন্য একটি নতুন ৩০-৪০ সেকেন্ডের বাংলা ভিডিও তৈরি করছি...*\n\n🎙️ এআই ভয়েসওভার ও অডিও সিঙ্ক হচ্ছে, অনুগ্রহ করে ২০-৩০ সেকেন্ড অপেক্ষা করুন।');
+        const draft = await generateVideoDraft(this.currentTopicIndex, feedback, apiKey);
+        this.pendingDraft = draft;
+        this.currentTopicIndex = (this.currentTopicIndex + 1) % CONTENT_PILLARS.length;
+        await this.sendDraftToOwner(ownerChatId, draft);
+        return draft;
+      } else {
+        this.tg.sendMessage(ownerChatId, '🤖 *স্যার, আমি WebPulse Automation-এর জন্য একটি নতুন পোস্ট ড্রাফট করছি...* এক মুহূর্ত অনুগ্রহ করে অপেক্ষা করুন।');
+        const draft = await generatePostDraft(
+          this.currentTopicIndex,
+          feedback,
+          this.pendingDraft ? this.pendingDraft.caption : null,
+          apiKey
+        );
+        this.pendingDraft = draft;
+        this.currentTopicIndex = (this.currentTopicIndex + 1) % CONTENT_PILLARS.length;
+        await this.sendDraftToOwner(ownerChatId, draft);
+        return draft;
+      }
     } catch (err) {
-      console.error('❌ [Social Media AI] Failed to generate post draft:', err.message);
-      this.tg.sendMessage(ownerChatId, `⚠️ স্যার, পোস্ট তৈরিতে একটু সমস্যা হয়েছে: ${err.message}`);
+      console.error('❌ [Social Media AI] Failed to generate post/video draft:', err.message);
+      this.tg.sendMessage(ownerChatId, `⚠️ স্যার, ড্রাফট তৈরিতে একটু সমস্যা হয়েছে: ${err.message}`);
       return null;
     }
   }
 
   async sendDraftToOwner(chatId, draft) {
-    const previewHeader = 
-      `📢 *[নতুন ফেসবুক পোস্ট ড্রাফট]* 🚀\n` +
-      `📌 *বিষয়:* ${draft.topic}\n\n` +
-      `📝 *প্রস্তাবিত ক্যাপশন:*\n${draft.caption}\n\n` +
-      `────────────────────────\n` +
-      `স্যার, এই ছবি ও ক্যাপশন দিয়ে পেজে পোস্ট কি করব? কোনো পরিবর্তন চাইলে শুধু লিখে জানান।`;
-
     const inlineKeyboard = {
       inline_keyboard: [
         [
           { text: '🚀 পেজে পোস্ট করো', callback_data: `post_approve_${draft.id}` },
-          { text: '🔄 নতুন ক্যাপশন লেখো', callback_data: `post_regen_${draft.id}` }
+          { text: draft.isVideo ? '🔄 নতুন ভিডিও বানাও' : '🔄 নতুন ক্যাপশন লেখো', callback_data: `post_regen_${draft.id}` }
         ],
         [
           { text: '❌ বাতিল', callback_data: `post_cancel_${draft.id}` }
@@ -104,30 +105,62 @@ class PostSchedulerService {
       ]
     };
 
-    // Send Photo first
-    await this.sendPhoto(chatId, draft.imageUrl, `🖼️ প্রস্তাবিত পোস্ট ব্যানার (WebPulse Automation)`);
+    if (draft.isVideo) {
+      const videoHeader = 
+        `🎬 *[নতুন ফেসবুক এআই ভিডিও ড্রাফট]* 🚀\n` +
+        `📌 *বিষয়:* ${draft.topic}\n` +
+        `🎙️ *ভয়েসওভার:* ${draft.voiceoverScript}\n\n` +
+        `📝 *ক্যাপশন:*\n${draft.caption}\n\n` +
+        `────────────────────────\n` +
+        `স্যার, ভিডিওটি প্লে করে শুনুন। এটি পেজে পোস্ট করতে নিচের বাটনে চাপুন:`;
 
-    // Send Caption & Approval buttons
-    await this.sendMessageWithButtons(chatId, previewHeader, inlineKeyboard);
+      console.log(`📲 [Telegram] Sending video draft to Owner (${draft.videoPath})...`);
+      const sent = await this.sendVideo(chatId, draft.videoPath, `🎬 ${draft.topic} (WebPulse Automation Video)`, inlineKeyboard);
+      if (!sent) {
+        // Fallback: send photo and message if direct video upload had network hiccup
+        await this.sendPhoto(chatId, draft.imageUrl, `🖼️ ভিডিও ব্যানার প্রিভিউ`);
+        await this.sendMessageWithButtons(chatId, videoHeader, inlineKeyboard);
+      } else {
+        await this.sendMessageWithButtons(chatId, `📝 *প্রস্তাবিত ফেসবুক পোস্ট ক্যাপশন:*\n\n${draft.caption}`, null);
+      }
+    } else {
+      const previewHeader = 
+        `📢 *[নতুন ফেসবুক পোস্ট ড্রাফট]* 🚀\n` +
+        `📌 *বিষয়:* ${draft.topic}\n\n` +
+        `📝 *প্রস্তাবিত ক্যাপশন:*\n${draft.caption}\n\n` +
+        `────────────────────────\n` +
+        `স্যার, এই ছবি ও ক্যাপশন দিয়ে পেজে পোস্ট কি করব? কোনো পরিবর্তন চাইলে শুধু লিখে জানান।`;
+
+      // Send Photo first
+      await this.sendPhoto(chatId, draft.imageUrl, `🖼️ প্রস্তাবিত পোস্ট ব্যানার (WebPulse Automation)`);
+      // Send Caption & Approval buttons
+      await this.sendMessageWithButtons(chatId, previewHeader, inlineKeyboard);
+    }
   }
 
   async handleApproval(draftId, action) {
     const ownerChatId = this.tg.ownerChatId || this.config.telegram?.chatId;
 
     if (!this.pendingDraft || this.pendingDraft.id !== draftId) {
-      this.tg.sendMessage(ownerChatId, '⚠️ স্যার, এই ড্রাফটটির মেয়াদ শেষ হয়ে গেছে। নতুন ড্রাফট পেতে লিখুন: "/post"');
+      this.tg.sendMessage(ownerChatId, '⚠️ স্যার, এই ড্রাফটটির মেয়াদ শেষ হয়ে গেছে। নতুন ড্রাফট পেতে লিখুন: "/post" বা "/video"');
       return;
     }
 
     if (action === 'approve') {
-      this.tg.sendMessage(ownerChatId, '⏳ স্যার, পোস্টটি WebPulse Automation ফেসবুক পেজে পাবলিশ করা হচ্ছে...');
+      const isVideo = !!this.pendingDraft.isVideo;
+      this.tg.sendMessage(ownerChatId, `⏳ স্যার, ${isVideo ? 'ভিডিওটি' : 'পোস্টটি'} WebPulse Automation ফেসবুক পেজে পাবলিশ করা হচ্ছে...`);
 
-      const result = await publishToFacebook(this.pendingDraft.caption, this.pendingDraft.imageUrl, this.config);
+      let mediaUrl = this.pendingDraft.imageUrl;
+      if (isVideo) {
+        mediaUrl = `https://webpulse-bot.onrender.com/media/${this.pendingDraft.videoFileName}`;
+      }
+
+      const result = await publishToFacebook(this.pendingDraft.caption, mediaUrl, this.config, isVideo);
 
       if (result.success) {
         this.tg.sendMessage(
           ownerChatId,
-          `🎉 *অভিনন্দন স্যার!* পোস্টটি সফলভাবে পেজে পাবলিশ হয়েছে!\n\n🔗 পোস্ট লিংক: ${result.postUrl || 'Facebook Page Wall'}`
+          `🎉 *অভিনন্দন স্যার!* ${isVideo ? 'ভিডিওটি' : 'পোস্টটি'} সফলভাবে পেজে পাবলিশ হয়েছে!\n\n🔗 পোস্ট লিংক: ${result.postUrl || 'Facebook Page Wall'}`
         );
         this.pendingDraft = null;
       } else {
@@ -141,7 +174,8 @@ class PostSchedulerService {
         }
       }
     } else if (action === 'regen') {
-      await this.triggerNewDraft('Generate a different, exciting angle for this post');
+      const isVideo = !!this.pendingDraft.isVideo;
+      await this.triggerNewDraft('Generate a different, exciting angle for this post', isVideo);
     } else if (action === 'cancel') {
       this.pendingDraft = null;
       this.tg.sendMessage(ownerChatId, '❌ স্যার, প্রস্তাবিত পোস্ট ড্রাফটটি বাতিল করা হয়েছে। পরবর্তী শিডিউল অনুযায়ী নতুন ড্রাফট পাঠানো হবে।');
@@ -219,6 +253,64 @@ class PostSchedulerService {
         req.end();
       };
       sendReq(true);
+    });
+  }
+
+  sendVideo(chatId, videoPath, caption, replyMarkup) {
+    return new Promise((resolve) => {
+      const fs = require('fs');
+      if (!fs.existsSync(videoPath)) {
+        return resolve(false);
+      }
+      const fileBuffer = fs.readFileSync(videoPath);
+      const boundary = '----WebKitFormBoundary' + Math.random().toString(36).substring(2);
+      const CRLF = '\r\n';
+
+      let bodyHeader = '--' + boundary + CRLF + 'Content-Disposition: form-data; name="chat_id"' + CRLF + CRLF + chatId + CRLF;
+      if (caption) {
+        bodyHeader += '--' + boundary + CRLF + 'Content-Disposition: form-data; name="caption"' + CRLF + CRLF + caption.substring(0, 1000) + CRLF;
+      }
+      if (replyMarkup) {
+        bodyHeader += '--' + boundary + CRLF + 'Content-Disposition: form-data; name="reply_markup"' + CRLF + CRLF + JSON.stringify(replyMarkup) + CRLF;
+      }
+      bodyHeader += '--' + boundary + CRLF + 'Content-Disposition: form-data; name="video"; filename="presentation.mp4"' + CRLF + 'Content-Type: video/mp4' + CRLF + CRLF;
+
+      const bodyFooter = CRLF + '--' + boundary + '--' + CRLF;
+      const totalLen = Buffer.byteLength(bodyHeader) + fileBuffer.length + Buffer.byteLength(bodyFooter);
+
+      const req = https.request({
+        hostname: 'api.telegram.org',
+        path: `/bot${this.tg.token}/sendVideo`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data; boundary=' + boundary,
+          'Content-Length': totalLen
+        }
+      }, (res) => {
+        let respData = '';
+        res.on('data', chunk => respData += chunk);
+        res.on('end', () => {
+          try {
+            const parsed = JSON.parse(respData);
+            if (parsed.ok) {
+              resolve(true);
+            } else {
+              console.warn('⚠️ [Telegram] sendVideo multipart error:', parsed.description);
+              resolve(false);
+            }
+          } catch (e) {
+            resolve(false);
+          }
+        });
+      });
+      req.on('error', (err) => {
+        console.warn('⚠️ [Telegram] sendVideo network error:', err.message);
+        resolve(false);
+      });
+      req.write(Buffer.from(bodyHeader));
+      req.write(fileBuffer);
+      req.write(Buffer.from(bodyFooter));
+      req.end();
     });
   }
 }

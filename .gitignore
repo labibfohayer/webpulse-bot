@@ -1,7 +1,9 @@
-﻿node_modules/
+node_modules/
 cloudflared.exe
 .env
 output/invoices/*.pdf
 data/incoming/*
 data/processed/*
+public/media/*
+!public/media/.gitkeep
 *.log

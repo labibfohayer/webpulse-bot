@@ -131,20 +131,29 @@ class TelegramPollingService {
         const welcome = 
           `👋 *সালাম বস!* আমি আপনার সার্বক্ষণিক এআই সেলস ও সোশ্যাল মিডিয়া ম্যানেজার *@LabibFohayerBot*।\n\n` +
           `✅ আপনার ফোনের সাথে সিস্টেম সফলভাবে যুক্ত হয়েছে!\n\n` +
-          `📌 *প্রধান সুবিধাসমূহ:*\n` +
-          `1. ক্লায়েন্টের দামাদামির বাটন এপ্রুভাল (Accept/Counter/Reject)\n` +
-          `2. ফেসবুকে স্বয়ংক্রিয় পোস্ট ড্রাফট ও অনুমোদন (/post লিখুন নতুন পোস্টের জন্য)\n` +
-          `3. আমার সাথে যেকোনো ব্যক্তিগত পরামর্শ ও নির্দেশনা! 🚀`;
+          `📌 *প্রধান কমান্ডসমূহ:*\n` +
+          `1. 🖼️ \`/post\` — নতুন ৪K ব্যানার পোস্ট তৈরি করুন\n` +
+          `2. 🎬 \`/video\` — ৩০-৪০ সেকেন্ডের বাংলা এআই ভিডিও তৈরি করুন\n` +
+          `3. 🤝 ক্লায়েন্টের দামাদামির বাটন এপ্রুভাল (Accept/Counter/Reject)\n` +
+          `4. 💬 আমার সাথে যেকোনো ব্যবসায়িক পরামর্শ ও নির্দেশনা! 🚀`;
 
         this.sendMessage(chatId, welcome);
         console.log(`🎉 [Telegram] Owner Phone REGISTERED! Chat ID: ${chatId}`);
         return;
       }
 
+      // On-demand Social Media Video Generator Command
+      if (text === '/video' || text.toLowerCase() === 'video' || text.includes('ভিডিও বানাও') || text.includes('ভিডিও তৈরি করো') || text.includes('ভিডিও দাও')) {
+        if (this.postScheduler) {
+          await this.postScheduler.triggerNewDraft(null, true);
+        }
+        return;
+      }
+
       // On-demand Social Media Post Generator Command
       if (text === '/post' || text.toLowerCase() === 'post' || text.includes('পোস্ট বানাও') || text.includes('পোস্ট তৈরি করো')) {
         if (this.postScheduler) {
-          await this.postScheduler.triggerNewDraft();
+          await this.postScheduler.triggerNewDraft(null, false);
         }
         return;
       }

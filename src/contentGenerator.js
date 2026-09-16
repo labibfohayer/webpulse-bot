@@ -139,4 +139,4 @@ Guidelines:
   };
 }
 
-module.exports = { generatePostDraft, CONTENT_PILLARS };
+module.exports = { generatePostDraft, CONTENT_PILLARS, BANNER_COLLECTIONS, CATEGORY_KEYS };

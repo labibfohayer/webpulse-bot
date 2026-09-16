@@ -1,6 +1,6 @@
 const https = require('https');
 
-async function publishToFacebook(caption, imageUrl, config) {
+async function publishToFacebook(caption, mediaUrl, config, isVideo = false) {
   const pageId = config.facebook?.pageId;
   const accessToken = config.facebook?.pageAccessToken;
 
@@ -12,12 +12,19 @@ async function publishToFacebook(caption, imageUrl, config) {
     };
   }
 
-  const sendRequest = (targetUrl, usePhoto = true, isRetry = false) => {
+  const sendRequest = (targetUrl, mode = 'photo', isRetry = false) => {
     return new Promise((resolve) => {
       let postData = '';
       let endpointPath = '';
 
-      if (usePhoto && targetUrl) {
+      if (mode === 'video' && targetUrl) {
+        endpointPath = `/v19.0/${pageId}/videos`;
+        postData = JSON.stringify({
+          file_url: targetUrl,
+          description: caption,
+          access_token: accessToken
+        });
+      } else if (mode === 'photo' && targetUrl) {
         endpointPath = `/v19.0/${pageId}/photos`;
         postData = JSON.stringify({
           url: targetUrl,
@@ -57,18 +64,26 @@ async function publishToFacebook(caption, imageUrl, config) {
               });
             } else if (json.error) {
               const errMsg = json.error.message || '';
-              const isImageErr = json.error.code === 324 || errMsg.toLowerCase().includes('image') || errMsg.toLowerCase().includes('file');
+              console.warn(`⚠️ [Facebook Publish ${mode}] Error:`, errMsg);
 
-              // If image fetch failed, retry with high-res verified image or text post
-              if (usePhoto && isImageErr && !isRetry) {
-                console.warn('⚠️ [Facebook Photo] Image failed, retrying with verified backup 4K banner...');
-                const backupUrl = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80';
-                const retryRes = await sendRequest(backupUrl, true, true);
+              if (mode === 'video' && !isRetry) {
+                console.warn('⚠️ [Facebook Video] Video URL fetch issue, falling back to 4K Photo banner...');
+                const photoFallback = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80';
+                const retryRes = await sendRequest(photoFallback, 'photo', true);
                 resolve(retryRes);
                 return;
-              } else if (usePhoto && isImageErr && isRetry) {
+              }
+
+              const isImageErr = json.error.code === 324 || errMsg.toLowerCase().includes('image') || errMsg.toLowerCase().includes('file');
+              if (mode === 'photo' && isImageErr && !isRetry) {
+                console.warn('⚠️ [Facebook Photo] Image failed, retrying with verified backup 4K banner...');
+                const backupUrl = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80';
+                const retryRes = await sendRequest(backupUrl, 'photo', true);
+                resolve(retryRes);
+                return;
+              } else if (mode === 'photo' && isImageErr && isRetry) {
                 console.warn('⚠️ [Facebook Photo] Photo post retry failed, falling back to feed post...');
-                const feedRes = await sendRequest(null, false, true);
+                const feedRes = await sendRequest(null, 'feed', true);
                 resolve(feedRes);
                 return;
               }
@@ -89,9 +104,9 @@ async function publishToFacebook(caption, imageUrl, config) {
       });
 
       req.on('error', async (err) => {
-        if (usePhoto && !isRetry) {
-          console.warn('⚠️ [Facebook Photo] Network error, retrying feed post...');
-          const feedRes = await sendRequest(null, false, true);
+        if (!isRetry) {
+          console.warn(`⚠️ [Facebook Publish ${mode}] Network error, retrying feed post...`);
+          const feedRes = await sendRequest(null, 'feed', true);
           resolve(feedRes);
         } else {
           resolve({ success: false, error: 'network_error', message: err.message });
@@ -103,7 +118,8 @@ async function publishToFacebook(caption, imageUrl, config) {
     });
   };
 
-  return sendRequest(imageUrl, !!imageUrl, false);
+  const initialMode = isVideo ? 'video' : (mediaUrl ? 'photo' : 'feed');
+  return sendRequest(mediaUrl, initialMode, false);
 }
 
 module.exports = { publishToFacebook };
