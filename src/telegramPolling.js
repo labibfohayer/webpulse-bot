@@ -53,17 +53,18 @@ class TelegramPollingService {
         }
       }
     } catch (err) {
-      // Ignore network timeouts in long polling
+      console.error('⚠️ [Telegram Polling Error]:', err.message);
+    } finally {
+      if (this.isPolling) {
+        setTimeout(() => this.poll(), 400);
+      }
     }
-
-    // Schedule next poll
-    setTimeout(() => this.poll(), 400);
   }
 
   getUpdates(offset) {
     return new Promise((resolve) => {
-      const url = `https://api.telegram.org/bot${this.token}/getUpdates?offset=${offset}&timeout=20`;
-      https.get(url, (res) => {
+      const url = `https://api.telegram.org/bot${this.token}/getUpdates?offset=${offset}&timeout=15`;
+      const req = https.get(url, { timeout: 25000 }, (res) => {
         let data = '';
         res.on('data', chunk => data += chunk);
         res.on('end', () => {
@@ -74,7 +75,12 @@ class TelegramPollingService {
             resolve([]);
           }
         });
-      }).on('error', () => resolve([]));
+      });
+      req.on('timeout', () => {
+        req.destroy();
+        resolve([]);
+      });
+      req.on('error', () => resolve([]));
     });
   }
 
@@ -312,28 +318,38 @@ Instructions:
   }
 
   sendMessage(chatId, text, inlineButtons = null) {
-    const payload = {
-      chat_id: chatId,
-      text,
-      parse_mode: 'Markdown'
-    };
-    if (inlineButtons) {
-      payload.reply_markup = { inline_keyboard: inlineButtons };
-    }
+    const sendReq = (useMarkdown) => {
+      const payload = { chat_id: chatId, text };
+      if (useMarkdown) payload.parse_mode = 'Markdown';
+      if (inlineButtons) payload.reply_markup = { inline_keyboard: inlineButtons };
+      const body = JSON.stringify(payload);
 
-    const body = JSON.stringify(payload);
-    const req = https.request({
-      hostname: 'api.telegram.org',
-      path: `/bot${this.token}/sendMessage`,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(body)
-      }
-    });
-    req.on('error', (err) => console.error('[Telegram API] Send Error:', err.message));
-    req.write(body);
-    req.end();
+      const req = https.request({
+        hostname: 'api.telegram.org',
+        path: `/bot${this.token}/sendMessage`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(body)
+        }
+      }, (res) => {
+        let d = '';
+        res.on('data', c => d += c);
+        res.on('end', () => {
+          try {
+            const j = JSON.parse(d);
+            if (!j.ok && useMarkdown) {
+              console.warn('⚠️ [Telegram sendMessage] Markdown failed, retrying plain text:', j.description);
+              sendReq(false);
+            }
+          } catch (e) {}
+        });
+      });
+      req.on('error', (err) => console.error('[Telegram API] Send Error:', err.message));
+      req.write(body);
+      req.end();
+    };
+    sendReq(true);
   }
 
   answerCallbackQuery(queryId, text) {
