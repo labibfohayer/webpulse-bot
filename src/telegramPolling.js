@@ -117,9 +117,9 @@ class TelegramPollingService {
       return;
     }
 
-    // 2. User sent a direct text message on Telegram
-    if (update.message && update.message.text) {
-      const msg = update.message;
+    // 2. User sent or edited a direct text message on Telegram
+    const msg = update.message || update.edited_message;
+    if (msg && msg.text) {
       const chatId = msg.chat.id;
       const text = msg.text.trim();
 
@@ -145,11 +145,9 @@ class TelegramPollingService {
       // On-demand Social Media Video Generator Command (supports /video, /vedio, /vdo, etc.)
       const lower = text.toLowerCase().trim();
       const isVideoCmd = 
-        lower === '/video' || lower === 'video' ||
-        lower === '/vedio' || lower === 'vedio' ||
-        lower === '/vdo' || lower === 'vdo' ||
-        lower.startsWith('/vedio') || lower.startsWith('/video') || lower.startsWith('/vdo') ||
-        text.includes('ভিডিও') || lower.includes('vedio') || lower.includes('video');
+        lower.startsWith('/video') || lower.startsWith('/vedio') || lower.startsWith('/vdo') ||
+        lower === 'video' || lower === 'vedio' || lower === 'vdo' ||
+        text.includes('ভিডিও') || lower.includes('vedio') || lower.includes('video') || lower.includes('vdo');
 
       if (isVideoCmd) {
         if (this.postScheduler) {
