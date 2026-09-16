@@ -142,8 +142,16 @@ class TelegramPollingService {
         return;
       }
 
-      // On-demand Social Media Video Generator Command
-      if (text === '/video' || text.toLowerCase() === 'video' || text.includes('ভিডিও বানাও') || text.includes('ভিডিও তৈরি করো') || text.includes('ভিডিও দাও')) {
+      // On-demand Social Media Video Generator Command (supports /video, /vedio, /vdo, etc.)
+      const lower = text.toLowerCase().trim();
+      const isVideoCmd = 
+        lower === '/video' || lower === 'video' ||
+        lower === '/vedio' || lower === 'vedio' ||
+        lower === '/vdo' || lower === 'vdo' ||
+        lower.startsWith('/vedio') || lower.startsWith('/video') || lower.startsWith('/vdo') ||
+        text.includes('ভিডিও') || lower.includes('vedio') || lower.includes('video');
+
+      if (isVideoCmd) {
         if (this.postScheduler) {
           await this.postScheduler.triggerNewDraft(null, true);
         }
