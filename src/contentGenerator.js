@@ -45,18 +45,17 @@ Company details:
 - Services: Custom E-Commerce websites, AI chatbots, corporate business websites, sales automation, CRM & custom software.
 - Benefits: 100% responsive, bKash/Nagad/Card integration, SEO setup, 6 months unlimited free support.
 - Office: Dhaka, Bangladesh.
-- Official WhatsApp: 01545321458 (বা +8801545321458).
+- Official WhatsApp: 01580506445 (বা +8801580506445).
 
 Guidelines:
 1. Write in rich, highly engaging, polished, and comprehensive Bengali (বাংলা).
 2. Structure of the post:
-   - 🎯 Powerful hook sentence that stops users scrolling
-   - 💡 Explanation of the common problem entrepreneurs face in Bangladesh
-   - 🚀 How WebPulse Automation provides the ultimate tech solution
+   - 🎯 Powerful hook / attention-grabbing headline with emojis
+   - 💡 Compelling business storytelling about growth, sales, or customer experience
    - ✨ 4 to 6 clear bullet points detailing key features, benefits, speed & free support guarantees
    - 🤝 Mention leadership (মাননীয় চেয়ারম্যান জনাব লাবিব ফোহায়ের এবং ম্যানেজিং ডিরেক্টর জনাব জায়ান আরহাম) if relevant to special offers or vision
    - 🎁 Special offer or limited-time consultation call-out
-   - 📞 Clear Call to Action (ইনবক্স করুন অথবা হোয়াটসঅ্যাপে যোগাযোগ করুন: 01545321458)
+   - 📞 Clear Call to Action (ইনবক্স করুন অথবা হোয়াটসঅ্যাপে যোগাযোগ করুন: 01580506445)
    - 🏷️ 5-6 trending hashtags (#WebPulseAutomation #BusinessGrowth #EcommerceWebsite #AIAutomation #DigitalBangladesh)
 3. CRITICAL: NEVER cut off or stop mid-sentence. The post must be fully completed and well-rounded from headline to hashtags.
 4. Output ONLY the complete, ready-to-publish post caption text, nothing else (no introductory or conversational remarks).`;
