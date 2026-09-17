@@ -1,0 +1,19 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 854
+PlayResY: 480
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,kalpurush,22,&H0000FFFF,&H000000FF,&H00000000,&HA0000000,-1,0,0,0,100,100,0,0,3,2.5,1.2,2,25,25,32,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.50,0:00:05.00,Default,,0,0,0,,আপনার ব্যবসাকে ডিজিটাল যুগের সাথে আরও বড় করতে চান?
+Dialogue: 0,0:00:05.00,0:00:10.00,Default,,0,0,0,,WebPulse Automation নিয়ে এসেছে প্রিমিয়াম সফটওয়্যার সল্যুশন।
+Dialogue: 0,0:00:10.00,0:00:15.50,Default,,0,0,0,,আমরা তৈরি করি আল্ট্রা-ফাস্ট ই-কমার্স ওয়েবসাইট ও ডায়নামিক পোর্টাল।
+Dialogue: 0,0:00:15.50,0:00:20.50,Default,,0,0,0,,যেকোনো কাস্টম ওয়েবসাইট, লাইভ চেকআউট ও পেমেন্ট গেটওয়ে সহ।
+Dialogue: 0,0:00:20.50,0:00:25.50,Default,,0,0,0,,ব্যবসার কাজ সহজ করতে আমরা ডেভেলপ করি আকর্ষণীয় মোবাইল অ্যাপস...
+Dialogue: 0,0:00:25.50,0:00:30.50,Default,,0,0,0,,...এবং ২৪ ঘণ্টা সেলস বাড়ানো স্মার্ট এআই চ্যাটবট।
+Dialogue: 0,0:00:30.50,0:00:36.00,Default,,0,0,0,,চেয়ারম্যান লাবিব ফোহায়ের ও এমডি জায়ান আরহামের নেতৃত্বে পাচ্ছেন ৬ মাসের ফ্রি সাপোর্ট।
+Dialogue: 0,0:00:36.00,0:00:41.04,Default,,0,0,0,,আজই যোগাযোগ করুন আমাদের অফিশিয়াল হোয়াটসঅ্যাপে: ০১৫৮০৫০৬৪৪৫

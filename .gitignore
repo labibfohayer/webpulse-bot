@@ -2,8 +2,11 @@ node_modules/
 cloudflared.exe
 .env
 output/invoices/*.pdf
+output/notifications/*
 data/incoming/*
 data/processed/*
 public/media/*
 !public/media/.gitkeep
+!public/media/webpulse_master_promo.mp4
+!public/media/promo_subtitles.ass
 *.log

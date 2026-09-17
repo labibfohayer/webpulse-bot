@@ -178,7 +178,7 @@ class PostSchedulerService {
 
     if (action === 'approve') {
       const isVideo = !!draft.isVideo;
-      this.tg.sendMessage(ownerChatId, `⏳ স্যার, ${isVideo ? 'ভিডিওটি' : 'পোস্টটি'} WebPulse Automation ফেসবুক পেজে পাবলিশ করা হচ্ছে...`);
+      this.tg.sendMessage(ownerChatId, `⏳ বস, ${isVideo ? 'ভিডিওটি' : 'পোস্টটি'} WebPulse Automation ফেসবুক পেজে পাবলিশ করা হচ্ছে...`);
 
       let mediaUrl = draft.imageUrl;
       if (isVideo) {
@@ -186,29 +186,33 @@ class PostSchedulerService {
       }
 
       console.log(`🚀 [Social Media AI] Publishing ${isVideo ? 'VIDEO' : 'PHOTO'} to Facebook...`);
-      const result = await publishToFacebook(draft.caption, mediaUrl, this.config, isVideo);
+      const result = await publishToFacebook(draft.caption, mediaUrl, this.config, isVideo, draft.videoPath);
 
       if (result.success) {
         this.tg.sendMessage(
           ownerChatId,
-          `🎉 *অভিনন্দন স্যার!* ${isVideo ? 'ভিডিওটি' : 'পোস্টটি'} সফলভাবে পেজে পাবলিশ হয়েছে!\n\n🔗 পোস্ট লিংক: ${result.postUrl || 'Facebook Page Wall'}`
+          `🎉 *অভিনন্দন বস!* ${isVideo ? 'ভিডিওটি' : 'পোস্টটি'} সফলভাবে পেজে পাবলিশ হয়েছে!\n\n🔗 পোস্ট লিংক: ${result.postUrl || 'Facebook Page Wall'}`
         );
         this.pendingDraft = null;
         savePendingDraft(null);
       } else {
-        const isExpired = result.error === 190 || (result.message && (result.message.includes('Session has expired') || result.message.includes('validating access token')));
-        if (isExpired) {
+        const isAuthError = result.error === 190 || result.error === 102 ||
+          (result.message && (
+            result.message.includes('Session has expired') ||
+            result.message.includes('validating access token') ||
+            result.message.includes('must be granted') ||
+            result.message.includes('permission') ||
+            result.message.includes('impersonating')
+          ));
+
+        if (isAuthError) {
           this.tg.sendMessage(
             ownerChatId,
-            `⚠️ *স্যার, ফেসবুক এক্সেস টোকেনের মেয়াদ শেষ (Session Expired):*\nমেটার নিয়মানুযায়ী পূর্বের টোকেনটি এক্সপায়ার হয়ে গেছে।\n\n🔑 নতুন টোকেনটি শুধু এখানে চ্যাটে পেস্ট করে পাঠিয়ে দিন, আমি সাথে সাথে সেট করে নেব!\n\n📋 অথবা ওপরের তৈরি করা ভিডিও ও ক্যাপশনটি এখনই ফেসবুক পেজে সরাসরি দিয়ে দিতে পারেন।`
+            `⚠️ *বস, ফেসবুক টোকেনের পারমিশন বা সেশন রিনিউ প্রয়োজন:*\n\n_${result.message.trim()}_\n\n📌 *সহজ সমাধান (১ মিনিট):*\n১.developers.facebook.com এর গ্রাফ এপিআই এক্সপ্লোরারে যান\n২. *User or Page* ড্রপডাউনে *"WebPulse Automation"* পেইজ সিলেক্ট করুন\n৩. *Generate Access Token* চাপুন\n৪. নতুন টোকেনটি (EAA...) সরাসরি এই চ্যাটে পাঠিয়ে দিন—আমি সাথে সাথে আপডেট করে দেব!\n\n📋 *আপনার রেডি ক্যাপশন:*`
           );
-        } else if (result.requiresPermission) {
-          this.tg.sendMessage(
-            ownerChatId,
-            `⚠️ *স্যার, ফেসবুক পারমিশন আপডেট প্রয়োজন:*\nফেসবুক পেজে পোস্ট করার জন্য 'pages_manage_posts' পারমিশন প্রয়োজন।\n\nতবে আপনার পোস্ট ক্যাপশনটি সম্পূর্ণ তৈরি আছে, আপনি চাইলে সরাসরি কপি করে পেজে দিয়ে দিতে পারেন:\n\n${draft.caption}`
-          );
+          this.tg.sendMessage(ownerChatId, draft.caption);
         } else {
-          this.tg.sendMessage(ownerChatId, `⚠️ স্যার, ফেসবুকে পোস্ট করতে ত্রুটি হয়েছে: ${result.message}`);
+          this.tg.sendMessage(ownerChatId, `⚠️ বস, ফেসবুকে পোস্ট করতে সমস্যা হয়েছে: ${result.message}`);
         }
       }
     } else if (action === 'regen') {
