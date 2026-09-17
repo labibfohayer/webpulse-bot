@@ -182,6 +182,11 @@ class TelegramPollingService {
                 chatId,
                 `⚠️ *টোকেনটি অসম্পূর্ণ বা কপি করার সময় কেটে গেছে!*\n_(${verifyRes.error})_\n\n📌 *সমাধান:*\nগ্রাফ এপিআই এক্সপ্লোরারে (Graph API Explorer) টোকেন বক্সে ক্লিক করে কিবোর্ড থেকে *Ctrl + A* চেপে সম্পূর্ণ টোকেনটি সিলেক্ট করে কপি করুন, অথবা পাশে থাকা ছোট কপি আইকনটিতে চাপ দিন। এরপর পুরোটা এখানে পেস্ট করুন।`
               );
+            } else if (verifyRes.error.includes('must be granted') || verifyRes.error.includes('permission') || verifyRes.error.includes('impersonating')) {
+              this.sendMessage(
+                chatId,
+                `⚠️ *মেটা পেজ পারমিশন সংক্রান্ত সতর্কতা:*\n_${verifyRes.error}_\n\n📌 *১ মিনিটের সমাধান:*\n১.developers.facebook.com এর গ্রাফ এপিআই এক্সপ্লোরারে যান\n২. *Permissions* এ গিয়ে *Add a Permission* থেকে *pages_show_list, pages_read_engagement, pages_manage_posts* পারমিশনগুলো সিলেক্ট করুন\n৩. *User or Page* ড্রপডাউনে আপনার *"WebPulse Automation"* পেইজটি বেছে নিন\n৪. *Generate Access Token* চাপুন ও টোকেনটি এখানে পাঠিয়ে দিন।`
+              );
             } else {
               this.sendMessage(
                 chatId,
@@ -358,11 +363,13 @@ Instructions:
       hostname: 'api.telegram.org',
       path: `/bot${this.token}/answerCallbackQuery`,
       method: 'POST',
+      timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(body)
       }
     });
+    req.on('timeout', () => req.destroy());
     req.on('error', () => {});
     req.write(body);
     req.end();
