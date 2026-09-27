@@ -190,7 +190,6 @@ class PostSchedulerService {
       this.tg.sendMessage(ownerChatId, '❌ বস, প্রস্তাবিত পোস্ট ড্রাফটটি বাতিল করা হয়েছে। পরবর্তী শিডিউল অনুযায়ী নতুন পোস্ট ড্রাফট পাঠানো হবে।');
     }
   }
-  }
 
   sendPhoto(chatId, photoUrl, caption) {
     return new Promise((resolve) => {
@@ -208,9 +207,18 @@ class PostSchedulerService {
             try {
               const parsed = JSON.parse(respData);
               if (!parsed.ok && !isRetry) {
-                console.warn('⚠️ [Telegram] sendPhoto dynamic failed, retrying with high-res backup:', parsed.description);
-                const backupUrl = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80';
-                sendReq(backupUrl, true);
+                console.warn('⚠️ [Telegram] sendPhoto failed:', parsed.description);
+                // In case of telegram error, try without caption to avoid formatting rejection
+                const retryData = JSON.stringify({ chat_id: chatId, photo: urlToUse });
+                const retryReq = https.request({
+                  hostname: 'api.telegram.org',
+                  path: `/bot${this.tg.token}/sendPhoto`,
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(retryData) }
+                }, () => resolve(true));
+                retryReq.on('error', () => resolve(false));
+                retryReq.write(retryData);
+                retryReq.end();
                 return;
               }
             } catch (e) {}
@@ -218,12 +226,8 @@ class PostSchedulerService {
           });
         });
         req.on('error', (err) => {
-          if (!isRetry) {
-            const backupUrl = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80';
-            sendReq(backupUrl, true);
-          } else {
-            resolve(false);
-          }
+          console.warn('⚠️ [Telegram] sendPhoto network error:', err.message);
+          resolve(false);
         });
         req.write(data);
         req.end();

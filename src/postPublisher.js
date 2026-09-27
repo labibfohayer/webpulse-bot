@@ -181,22 +181,15 @@ async function publishToFacebook(caption, mediaUrl, config, isVideo = false, vid
               }
 
               if (mode === 'video' && !isRetry) {
-                console.warn('⚠️ [Facebook Video] Video URL fetch issue, falling back to 4K Photo banner...');
-                const photoFallback = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80';
-                const retryRes = await sendRequest(photoFallback, 'photo', true);
-                resolve(retryRes);
+                console.warn('⚠️ [Facebook Video] Video URL fetch issue, falling back to feed post...');
+                const feedRes = await sendRequest(null, 'feed', true);
+                resolve(feedRes);
                 return;
               }
 
               const isImageErr = json.error.code === 324 || errMsg.toLowerCase().includes('image') || errMsg.toLowerCase().includes('file');
               if (mode === 'photo' && isImageErr && !isRetry) {
-                console.warn('⚠️ [Facebook Photo] Image failed, retrying with verified backup 4K banner...');
-                const backupUrl = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80';
-                const retryRes = await sendRequest(backupUrl, 'photo', true);
-                resolve(retryRes);
-                return;
-              } else if (mode === 'photo' && isImageErr && isRetry) {
-                console.warn('⚠️ [Facebook Photo] Photo post retry failed, falling back to feed post...');
+                console.warn('⚠️ [Facebook Photo] Photo URL rejected, falling back to feed post...');
                 const feedRes = await sendRequest(null, 'feed', true);
                 resolve(feedRes);
                 return;
