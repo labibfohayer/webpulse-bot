@@ -46,79 +46,57 @@ const CONTENT_PILLARS = [
 
 const BANNER_COLLECTIONS = {
   ecommerce: [
-    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1556742208-999815fca738?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1508873696983-2df5293cb325?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1491933382434-500287f9b54b?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e', // Neon currency digital concept
+    'https://images.unsplash.com/photo-1512428559087-560fa5ceab42', // Modern smartphone e-commerce app
+    'https://images.unsplash.com/photo-1441986300917-64674bd600d8', // Modern luxury fashion boutique
+    'https://images.unsplash.com/photo-1549465220-1a8b9238cd48', // Minimalist sleek gift box package
+    'https://images.unsplash.com/photo-1559526324-4b87b5e36e44', // Glowing digital payment card
+    'https://images.unsplash.com/photo-1580674684081-7617fbf3d745', // Electric courier delivery bike
+    'https://images.unsplash.com/photo-1551836022-d5d88e9218df', // Modern tablet sales analytics
+    'https://images.unsplash.com/photo-1542291026-7eec264c27ff', // Iconic sneaker product unboxing
+    'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a', // Modern architectural store interior
+    'https://images.unsplash.com/photo-1563013544-824ae1b704d3', // Online transaction smartphone
+    'https://images.unsplash.com/photo-1472851294608-062f824d29cc'  // Sleek boutique storefront
   ],
   chatbot: [
-    'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1589254065878-42c9da997008?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1507146426996-ef0538887e1a?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe', // Futuristic sleek silver AI humanoid
+    'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5', // Glowing green cyber data matrix
+    'https://images.unsplash.com/photo-1534536281715-e28d76689b4d', // Professional customer support agent with headset
+    'https://images.unsplash.com/photo-1558494949-ef010cbdcc31', // Neon cyan and purple server datacenter
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa', // Glowing digital globe network
+    'https://images.unsplash.com/photo-1507499739999-097706ad8914', // Blue fiber optics laser light
+    'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4', // Neon geometric wireframe cube
+    'https://images.unsplash.com/photo-1581092160607-ee22621dd758', // High-tech robotic arm laboratory
+    'https://images.unsplash.com/photo-1589254065878-42c9da997008', // Autonomous smart mobile robot
+    'https://images.unsplash.com/photo-1550751827-4bd374c3f58b'  // High-tech holographic cyber dashboard
   ],
   corporate: [
-    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab', // Ultra-modern glass skyscraper looking up
+    'https://images.unsplash.com/photo-1497366811353-6870744d04b2', // Luxury corporate boardroom overlooking skyline
+    'https://images.unsplash.com/photo-1524758631624-e2822e304c36', // Minimalist executive office desk
+    'https://images.unsplash.com/photo-1531482615713-2afd69097998', // Collaborative modern tech development team
+    'https://images.unsplash.com/photo-1506146332389-18140dc7b2fb', // High-rise architectural tower at sunset
+    'https://images.unsplash.com/photo-1521791136064-7986c2920216', // Elite business agreement handshake
+    'https://images.unsplash.com/photo-1555066931-4365d14bab8c', // Dual monitor clean software coding setup
+    'https://images.unsplash.com/photo-1542744173-8e7e53415bb0', // High-energy business strategy meeting
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d'  // Tech development workspace with screens
   ],
   growth: [
-    'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1533750516457-a7f992034fec?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1520607164069-c5b0ab227b76?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1434626881859-194d67b2b86f?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f', // Bull sculpture representing market growth
+    'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1', // Glowing world map showing trade growth
+    'https://images.unsplash.com/photo-1529699211952-734e80c4d42b', // Chess game victory strategy
+    'https://images.unsplash.com/photo-1509198397868-475647b2a1e5', // High-speed dynamic city traffic light trails
+    'https://images.unsplash.com/photo-1507679799987-c73779587ccf', // Elegant businessman standing tall
+    'https://images.unsplash.com/photo-1557804506-669a67965ba0', // Modern colorful creative agency workgroup
+    'https://images.unsplash.com/photo-1531403009284-440f080d1e12'  // UX UI wireframe product design table
   ],
   support: [
-    'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1534536281715-e28d76689b4d?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1563986768609-322da13575f3', // Neon green cybersecurity padlock
+    'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2', // Friendly smiling corporate professional
+    'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158', // IT infrastructure server engineer
+    'https://images.unsplash.com/photo-1560250097-0b93528c311a', // Experienced confident IT consultant
+    'https://images.unsplash.com/photo-1516321497487-e288fb19713f', // High-tech digital handshake connection
+    'https://images.unsplash.com/photo-1517048676732-d65bc937f952'  // Professional client advisory conference
   ]
 };
 
@@ -127,37 +105,47 @@ const CATEGORY_KEYS = ['ecommerce', 'chatbot', 'corporate', 'growth', 'support']
 /**
  * Guaranteed 100% Unique Image Selection.
  * Tracks previously used images on disk to prevent ANY duplicate banners.
+ * Appends a cache-buster timestamp parameter so Telegram never displays a cached picture.
  */
 function getDynamicImageUrl(topicIndex) {
   const categoryKey = CATEGORY_KEYS[topicIndex % CATEGORY_KEYS.length];
   const pool = BANNER_COLLECTIONS[categoryKey] || BANNER_COLLECTIONS.ecommerce;
   const usedList = loadUsedBanners();
-  const usedSet = new Set(usedList);
+  const usedBaseSet = new Set(usedList.map(u => u.split('?')[0]));
 
-  // Strictly filter out any image that has ever been used
-  let available = pool.filter(url => !usedSet.has(url));
+  // Strictly filter out any image that has ever been used (comparing base URL without query params)
+  let available = pool.filter(url => !usedBaseSet.has(url.split('?')[0]));
 
-  // If this category pool is exhausted, check other category pools for unused images
+  // If this category pool is exhausted, search all other pools for unused images
   if (available.length === 0) {
     const allPool = Object.values(BANNER_COLLECTIONS).flat();
-    available = allPool.filter(url => !usedSet.has(url));
+    available = allPool.filter(url => !usedBaseSet.has(url.split('?')[0]));
   }
 
-  // If literally all 70+ images have been used across all pools, reset the oldest 50%
+  // If literally every image in all pools has been used, keep only recent half
   if (available.length === 0) {
-    console.log('🔄 [Content AI] All 70+ images used! Clearing oldest half of history...');
+    console.log('🔄 [Content AI] All images used! Clearing oldest half of history...');
     const kept = usedList.slice(Math.floor(usedList.length / 2));
     saveUsedBanners(kept);
-    const newUsedSet = new Set(kept);
-    available = pool.filter(url => !newUsedSet.has(url));
+    const newUsedBaseSet = new Set(kept.map(u => u.split('?')[0]));
+    available = pool.filter(url => !newUsedBaseSet.has(url.split('?')[0]));
+    if (available.length === 0) {
+      available = Object.values(BANNER_COLLECTIONS).flat().filter(url => !newUsedBaseSet.has(url.split('?')[0]));
+    }
   }
 
-  const selectedUrl = available[Math.floor(Math.random() * available.length)];
-  usedList.push(selectedUrl);
+  // Pick a fresh unused image
+  const baseSelectedUrl = available[Math.floor(Math.random() * available.length)];
+  
+  // Save base URL to history
+  usedList.push(baseSelectedUrl);
   saveUsedBanners(usedList);
 
-  console.log(`🖼️ [Content AI] Selected 100% fresh unique 4K banner (Total history tracked: ${usedList.length}): ${selectedUrl}`);
-  return selectedUrl;
+  // Add cache-buster & high quality parameters so Telegram / Meta never serves cached image
+  const finalImageUrl = `${baseSelectedUrl}?auto=format&fit=crop&w=1200&q=85&cb=${Date.now()}`;
+
+  console.log(`🖼️ [Content AI] Selected 100% fresh unique 4K banner (Total history tracked: ${usedList.length}): ${finalImageUrl}`);
+  return finalImageUrl;
 }
 
 async function generatePostDraft(topicIndex = null, feedback = null, currentCaption = null, apiKey) {
@@ -169,27 +157,29 @@ async function generatePostDraft(topicIndex = null, feedback = null, currentCapt
   const imageUrl = getDynamicImageUrl(index);
 
   const systemPrompt = `You are the chief copywriter for WebPulse Automation, an elite software & automation agency in Bangladesh.
-Leadership: Chairman জনাব লাবিব ফোহায়ের and MD জনাব জায়ান আরহাম.
 Official WhatsApp: 01580506445.
 Services: Custom E-Commerce websites, corporate portals, AI sales chatbots, bKash/Nagad payment integration, 6 months free technical support.
 
-CRITICAL INSTRUCTIONS FOR POST LENGTH & STRUCTURE (STRICTLY ENFORCED):
-1. LENGTH: Medium and balanced (around 70 to 100 Bengali words). NOT too long, NOT too short.
-2. COMPLETENESS: The post must be 100% complete and cleanly finished. NEVER stop or cut off mid-sentence.
+STRICT LENGTH & STRUCTURE REQUIREMENTS (MANDATORY):
+1. LENGTH: Medium-short, perfectly balanced (strictly 45 to 65 Bengali words). NOT too long, NOT an essay, and NOT too short.
+2. COMPLETENESS: The post must be 100% complete and beautifully finished. NEVER leave an incomplete or hanging sentence.
 3. STRUCTURE:
-   - 🎯 Catchy, energetic headline with relevant emojis (1-2 lines).
-   - 💡 1-2 punchy sentences addressing the business pain-point or solution.
-   - ✨ Exactly 3 to 4 short, crisp bullet points highlighting core benefits (e.g. কাস্টম ই-কমার্স শপ, ২৪/৭ এআই চ্যাটবট, ৬ মাসের ফ্রি সাপোর্ট).
-   - 📞 Clear, direct Call-to-Action with WhatsApp: 01580506445.
-   - 🏷️ 3 to 4 focused hashtags (#WebPulseAutomation #BusinessAutomation #EcommerceBD #AIChatbot).
-4. TONE: Persuasive, polished, professional Bengali.
+   - 🎯 [1 catchy energetic headline with emojis]
+   - 💡 [1 punchy problem-solution sentence]
+   - ✨ আমাদের প্রিমিয়াম সলিউশন:
+     • [Short bullet 1 - max 5 words]
+     • [Short bullet 2 - max 5 words]
+     • [Short bullet 3 - max 5 words]
+   - 📞 সরাসরি হোয়াটসঅ্যাপ করুন: 01580506445
+   - 🏷️ 3-4 hashtags (#WebPulseAutomation #EcommerceBD #BusinessAutomation)
+4. TONE: Professional, crisp, modern Bengali.
 5. Output ONLY the ready-to-publish post caption text, nothing else.`;
 
   let userPrompt = '';
   if (feedback && currentCaption) {
-    userPrompt = `Here is the current post caption:\n"${currentCaption}"\n\nOur Chairman Mr. Labib Fohayer has given this feedback to revise it:\n"${feedback}"\n\nPlease rewrite the complete post incorporating his instructions perfectly. Keep it medium length, crisp, and fully complete.`;
+    userPrompt = `Here is the current post caption:\n"${currentCaption}"\n\nOur Chairman Mr. Labib Fohayer has given this feedback to revise it:\n"${feedback}"\n\nPlease rewrite the complete post incorporating his instructions perfectly. Keep it medium length (strictly 45-65 Bengali words), crisp, and fully complete.`;
   } else {
-    userPrompt = `Write a fresh, medium-length, high-converting Facebook post about: ${pillar.topic}.\nTheme: ${pillar.prompt}`;
+    userPrompt = `Write a fresh, medium-length (45-65 Bengali words) Facebook post about: ${pillar.topic}.\nTheme: ${pillar.prompt}`;
   }
 
   const messages = [{ sender: 'client', text: userPrompt }];
