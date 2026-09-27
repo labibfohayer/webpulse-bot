@@ -218,7 +218,7 @@ class TelegramPollingService {
         }
       }
 
-      // On-demand Social Media Video Generator Command
+      // On-demand Social Media Video Generator Command - DISABLED per Boss's strict order
       const isVideoCmd = 
         lower === '/video' || lower === '/vedio' || lower === '/vdo' ||
         lower === 'video' || lower === 'vedio' || lower === 'vdo' ||
@@ -227,9 +227,10 @@ class TelegramPollingService {
         text === 'ভিডিও বানাও' || text === 'ভিডিও তৈরি করো' || text === 'নতুন ভিডিও';
 
       if (isVideoCmd) {
-        if (this.postScheduler) {
-          await this.postScheduler.triggerNewDraft(null, true);
-        }
+        this.sendMessage(
+          chatId,
+          `📌 *বস, আপনার নির্দেশ অনুযায়ী ভিডিও পোস্ট তৈরি বন্ধ রাখা হয়েছে।*\nএখন প্রতিটি পোস্টে সম্পূর্ণ ইউনিক ও ফ্রেশ ৪K ব্যানার ছবি এবং মাঝারি সাইজের সম্পূর্ণ ক্যাপশন দেওয়া হয়।\n\n👉 নতুন ব্যানার পোস্ট পেতে লিখুন: \`/post\``
+        );
         return;
       }
 

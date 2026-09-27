@@ -76,9 +76,8 @@ class PostSchedulerService {
 
     if (isTargetTime && this.lastTriggeredHour !== hour) {
       this.lastTriggeredHour = hour;
-      const isVideoTime = (hour === 13 || hour === 20);
-      console.log(`⏰ [Social Media AI] BD Peak Time reached (${bdTimeStr}). Drafting new ${isVideoTime ? 'VIDEO' : 'POST'}...`);
-      this.triggerNewDraft(null, isVideoTime);
+      console.log(`⏰ [Social Media AI] BD Peak Time reached (${bdTimeStr}). Drafting fresh unique 4K Photo Banner Post...`);
+      this.triggerNewDraft(null, false);
     }
   }
 
@@ -92,31 +91,21 @@ class PostSchedulerService {
     const apiKey = this.config.geminiApiKey || process.env.GEMINI_API_KEY;
 
     try {
-      if (forceVideo) {
-        this.tg.sendMessage(ownerChatId, '🎬 *স্যার, আমি WebPulse Automation-এর জন্য একটি নতুন ৩০-৪০ সেকেন্ডের বাংলা ভিডিও তৈরি করছি...*\n\n🎙️ এআই ভয়েসওভার ও অডিও সিঙ্ক হচ্ছে, অনুগ্রহ করে ২০-৩০ সেকেন্ড অপেক্ষা করুন।');
-        const draft = await generateVideoDraft(this.currentTopicIndex, feedback, apiKey);
-        this.pendingDraft = draft;
-        savePendingDraft(draft);
-        this.currentTopicIndex = (this.currentTopicIndex + 1) % CONTENT_PILLARS.length;
-        await this.sendDraftToOwner(ownerChatId, draft);
-        return draft;
-      } else {
-        this.tg.sendMessage(ownerChatId, '🤖 *স্যার, আমি WebPulse Automation-এর জন্য একটি নতুন পোস্ট ড্রাফট করছি...* এক মুহূর্ত অনুগ্রহ করে অপেক্ষা করুন।');
-        const draft = await generatePostDraft(
-          this.currentTopicIndex,
-          feedback,
-          this.pendingDraft ? this.pendingDraft.caption : null,
-          apiKey
-        );
-        this.pendingDraft = draft;
-        savePendingDraft(draft);
-        this.currentTopicIndex = (this.currentTopicIndex + 1) % CONTENT_PILLARS.length;
-        await this.sendDraftToOwner(ownerChatId, draft);
-        return draft;
-      }
+      this.tg.sendMessage(ownerChatId, '🤖 *বস, WebPulse Automation-এর জন্য একটি সম্পূর্ণ ইউনিক ৪K ব্যানার ও ক্যাপশন রেডি করছি...* এক মুহূর্ত অপেক্ষা করুন।');
+      const draft = await generatePostDraft(
+        this.currentTopicIndex,
+        feedback,
+        this.pendingDraft ? this.pendingDraft.caption : null,
+        apiKey
+      );
+      this.pendingDraft = draft;
+      savePendingDraft(draft);
+      this.currentTopicIndex = (this.currentTopicIndex + 1) % CONTENT_PILLARS.length;
+      await this.sendDraftToOwner(ownerChatId, draft);
+      return draft;
     } catch (err) {
-      console.error('❌ [Social Media AI] Failed to generate post/video draft:', err.message);
-      this.tg.sendMessage(ownerChatId, `⚠️ স্যার, ড্রাফট তৈরিতে একটু সমস্যা হয়েছে: ${err.message}`);
+      console.error('❌ [Social Media AI] Failed to generate post draft:', err.message);
+      this.tg.sendMessage(ownerChatId, `⚠️ বস, পোস্ট ড্রাফট তৈরিতে সমস্যা হয়েছে: ${err.message}`);
       return null;
     }
   }
@@ -126,7 +115,7 @@ class PostSchedulerService {
       inline_keyboard: [
         [
           { text: '🚀 পেজে পোস্ট করো', callback_data: `post_approve_${draft.id}` },
-          { text: draft.isVideo ? '🔄 নতুন ভিডিও বানাও' : '🔄 নতুন ক্যাপশন লেখো', callback_data: `post_regen_${draft.id}` }
+          { text: '🔄 নতুন ব্যানার ও ক্যাপশন', callback_data: `post_regen_${draft.id}` }
         ],
         [
           { text: '❌ বাতিল', callback_data: `post_cancel_${draft.id}` }
@@ -134,34 +123,17 @@ class PostSchedulerService {
       ]
     };
 
-    if (draft.isVideo) {
-      console.log(`📲 [Telegram] Sending video draft to Owner (${draft.videoPath})...`);
+    const previewHeader = 
+      `📢 *[নতুন ফেসবুক পোস্ট ড্রাফট]* 🚀\n` +
+      `📌 *বিষয়:* ${draft.topic}\n\n` +
+      `📝 *প্রস্তাবিত ক্যাপশন:*\n${draft.caption}\n\n` +
+      `────────────────────────\n` +
+      `বস, এই ৪K ব্যানার ও মাঝারি সাইজের সম্পূর্ণ ক্যাপশন দিয়ে কি পেজে পোস্ট করব? এপ্রুভ করতে নিচের বাটনে চাপুন:`;
 
-      const fullVideoCaption = 
-        `🎬 *[নতুন ফেসবুক এআই ভিডিও ড্রাফট]* 🚀\n` +
-        `📌 *বিষয়:* ${draft.topic}\n\n` +
-        `📝 *প্রস্তাবিত ফেসবুক ক্যাপশন:*\n${draft.caption}\n\n` +
-        `────────────────────────\n` +
-        `স্যার, ভিডিওটি প্লে করে শুনুন এবং ওপরের ক্যাপশনটি দেখুন। পেজে পোস্ট করতে নিচের বাটনে চাপুন:`;
-
-      // Send the playable video
-      await this.sendVideo(chatId, draft.videoPath, `🎬 ${draft.topic} (WebPulse Automation Video)`);
-
-      // Send the Full Caption with Action Buttons
-      await this.sendMessageWithButtons(chatId, fullVideoCaption, inlineKeyboard);
-    } else {
-      const previewHeader = 
-        `📢 *[নতুন ফেসবুক পোস্ট ড্রাফট]* 🚀\n` +
-        `📌 *বিষয়:* ${draft.topic}\n\n` +
-        `📝 *প্রস্তাবিত ক্যাপশন:*\n${draft.caption}\n\n` +
-        `────────────────────────\n` +
-        `স্যার, এই ছবি ও ক্যাপশন দিয়ে পেজে পোস্ট কি করব? কোনো পরিবর্তন চাইলে শুধু লিখে জানান।`;
-
-      // Send Photo first
-      await this.sendPhoto(chatId, draft.imageUrl, `🖼️ প্রস্তাবিত পোস্ট ব্যানার (WebPulse Automation)`);
-      // Send Caption & Approval buttons
-      await this.sendMessageWithButtons(chatId, previewHeader, inlineKeyboard);
-    }
+    // Send Photo first
+    await this.sendPhoto(chatId, draft.imageUrl, `🖼️ প্রস্তাবিত পোস্ট ব্যানার (WebPulse Automation)`);
+    // Send Caption & Approval buttons
+    await this.sendMessageWithButtons(chatId, previewHeader, inlineKeyboard);
   }
 
   async handleApproval(draftId, action) {
@@ -172,26 +144,21 @@ class PostSchedulerService {
 
     const draft = this.pendingDraft;
     if (!draft) {
-      this.tg.sendMessage(ownerChatId, '⚠️ স্যার, কোনো ড্রাফট সক্রিয় নেই। নতুন ড্রাফটের জন্য লিখুন: "/post" বা "/video"');
+      this.tg.sendMessage(ownerChatId, '⚠️ বস, কোনো ড্রাফট সক্রিয় নেই। নতুন ব্যানার পোস্টের জন্য লিখুন: "/post"');
       return;
     }
 
     if (action === 'approve') {
-      const isVideo = !!draft.isVideo;
-      this.tg.sendMessage(ownerChatId, `⏳ বস, ${isVideo ? 'ভিডিওটি' : 'পোস্টটি'} WebPulse Automation ফেসবুক পেজে পাবলিশ করা হচ্ছে...`);
+      this.tg.sendMessage(ownerChatId, `⏳ বস, পোস্টটি WebPulse Automation ফেসবুক পেজে পাবলিশ করা হচ্ছে...`);
 
-      let mediaUrl = draft.imageUrl;
-      if (isVideo) {
-        mediaUrl = `https://webpulse-bot.onrender.com/media/${draft.videoFileName}`;
-      }
-
-      console.log(`🚀 [Social Media AI] Publishing ${isVideo ? 'VIDEO' : 'PHOTO'} to Facebook...`);
-      const result = await publishToFacebook(draft.caption, mediaUrl, this.config, isVideo, draft.videoPath);
+      const mediaUrl = draft.imageUrl;
+      console.log(`🚀 [Social Media AI] Publishing 4K PHOTO to Facebook...`);
+      const result = await publishToFacebook(draft.caption, mediaUrl, this.config, false, null);
 
       if (result.success) {
         this.tg.sendMessage(
           ownerChatId,
-          `🎉 *অভিনন্দন বস!* ${isVideo ? 'ভিডিওটি' : 'পোস্টটি'} সফলভাবে পেজে পাবলিশ হয়েছে!\n\n🔗 পোস্ট লিংক: ${result.postUrl || 'Facebook Page Wall'}`
+          `🎉 *অভিনন্দন বস!* পোস্টটি সফলভাবে পেজে পাবলিশ হয়েছে!\n\n🔗 পোস্ট লিংক: ${result.postUrl || 'Facebook Page Wall'}`
         );
         this.pendingDraft = null;
         savePendingDraft(null);
@@ -216,13 +183,13 @@ class PostSchedulerService {
         }
       }
     } else if (action === 'regen') {
-      const isVideo = !!draft.isVideo;
-      await this.triggerNewDraft('Generate a different, exciting angle for this post', isVideo);
+      await this.triggerNewDraft('Generate a different, exciting fresh angle with a new unique banner', false);
     } else if (action === 'cancel') {
       this.pendingDraft = null;
       savePendingDraft(null);
-      this.tg.sendMessage(ownerChatId, '❌ স্যার, প্রস্তাবিত পোস্ট ড্রাফটটি বাতিল করা হয়েছে। পরবর্তী শিডিউল অনুযায়ী নতুন ড্রাফট পাঠানো হবে।');
+      this.tg.sendMessage(ownerChatId, '❌ বস, প্রস্তাবিত পোস্ট ড্রাফটটি বাতিল করা হয়েছে। পরবর্তী শিডিউল অনুযায়ী নতুন পোস্ট ড্রাফট পাঠানো হবে।');
     }
+  }
   }
 
   sendPhoto(chatId, photoUrl, caption) {
