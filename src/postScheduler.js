@@ -104,9 +104,18 @@ class PostSchedulerService {
       await this.sendDraftToOwner(ownerChatId, draft);
       return draft;
     } catch (err) {
-      console.error('❌ [Social Media AI] Failed to generate post draft:', err.message);
-      this.tg.sendMessage(ownerChatId, `⚠️ বস, পোস্ট ড্রাফট তৈরিতে সমস্যা হয়েছে: ${err.message}`);
-      return null;
+      console.error('❌ [Social Media AI] Post draft generation error, using instant fallback:', err.message);
+      const fallbackDraft = {
+        id: 'DRAFT-' + Date.now().toString().slice(-6),
+        topicIndex: 0,
+        topic: 'ই-কমার্স ওয়েবসাইট ও সেলস অটোমেশন',
+        caption: `🎯 ই-কমার্স ব্যবসাকে দিন আধুনিক রূপ! 🚀\n\n💡 সাধারণ ওয়েবসাইটে আটকে আছে বিক্রি? আমাদের কাস্টম সলিউশনে ব্যবসা বাড়ান দ্বিগুণ গতিতে।\n\n✨ আমাদের প্রিমিয়াম সলিউশন:\n• কাস্টম ই-কমার্স ওয়েবসাইট\n• লাইটনিং ফাস্ট প্রোডাক্ট ক্যাটালগ\n• অটোমেটেড চেকআউট ও পেমেন্ট সিস্টেম\n\n📞 সরাসরি হোয়াটসঅ্যাপ করুন: 01580506445\n\n🏷️ #WebPulseAutomation #EcommerceBD #BusinessAutomation`,
+        imageUrl: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1200&q=85&cb=' + Date.now()
+      };
+      this.pendingDraft = fallbackDraft;
+      savePendingDraft(fallbackDraft);
+      await this.sendDraftToOwner(ownerChatId, fallbackDraft);
+      return fallbackDraft;
     }
   }
 

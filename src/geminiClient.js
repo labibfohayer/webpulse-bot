@@ -1,9 +1,11 @@
 const https = require('https');
 
 const FALLBACK_MODELS = [
+  'gemini-3.8-flash',
+  'gemini-3.7-flash',
   'gemini-3.5-flash',
   'gemini-flash-latest',
-  'gemini-3.5-flash-lite',
+  'gemini-3.1-flash-lite',
   'gemini-flash-lite-latest'
 ];
 
@@ -16,7 +18,8 @@ async function callSingleGemini(modelName, body, apiKey) {
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(body)
-      }
+      },
+      timeout: 4500
     };
 
     const req = https.request(options, res => {
@@ -38,6 +41,11 @@ async function callSingleGemini(modelName, body, apiKey) {
       });
     });
 
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error(`[${modelName}] Request timeout`));
+    });
+
     req.on('error', reject);
     req.write(body);
     req.end();
@@ -46,7 +54,7 @@ async function callSingleGemini(modelName, body, apiKey) {
 
 /**
  * Direct Google Gemini API Client
- * Uses intelligent fallback across models for 100% uptime
+ * Uses fail-fast fallback across active models for rapid response
  */
 async function askGemini(messages, systemInstruction, apiKey) {
   if (!apiKey) {
@@ -79,7 +87,7 @@ async function askGemini(messages, systemInstruction, apiKey) {
       const reply = await callSingleGemini(modelName, body, apiKey);
       return reply;
     } catch (err) {
-      console.warn(`⚠️ Model ${modelName} failed, attempting next model: ${err.message}`);
+      console.warn(`⚠️ Model ${modelName} failed: ${err.message}`);
       lastError = err;
     }
   }

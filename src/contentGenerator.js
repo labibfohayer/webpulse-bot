@@ -148,6 +148,32 @@ function getDynamicImageUrl(topicIndex) {
   return finalImageUrl;
 }
 
+const FALLBACK_CAPTIONS = {
+  0: [
+    `🎯 ই-কমার্স ব্যবসাকে দিন আধুনিক রূপ! 🚀\n\n💡 সাধারণ ওয়েবসাইটে আটকে আছে বিক্রি? আমাদের কাস্টম সলিউশনে ব্যবসা বাড়ান দ্বিগুণ গতিতে।\n\n✨ আমাদের প্রিমিয়াম সলিউশন:\n• কাস্টম ই-কমার্স ওয়েবসাইট\n• লাইটনিং ফাস্ট প্রোডাক্ট ক্যাটালগ\n• অটোমেটেড চেকআউট ও পেমেন্ট সিস্টেম\n\n📞 সরাসরি হোয়াটসঅ্যাপ করুন: 01580506445\n\n🏷️ #WebPulseAutomation #EcommerceBD #BusinessAutomation`,
+    `🎯 ম্যানুয়াল অর্ডারের ঝামেলা শেষ! শুরু হোক অটোমেশন 🛒\n\n💡 মেসেঞ্জারে ঘণ্টার পর ঘণ্টা বসে না থেকে কাস্টমারদের দিন মাত্র কয়েক সেকেন্ডে স্বয়ংক্রিয় অর্ডার প্লেসমেন্টের অভিজ্ঞতা।\n\n✨ প্রধান সুবিধাসমূহ:\n• বিকাশ ও নগদ সরাসরি পেমেন্ট ইন্টিগ্রেশন\n• আল্ট্রা-ফাস্ট মোবাইল ফ্রেন্ডলি ওয়েবসাইট\n• ৬ মাসের ফ্রি ডেডিকেটেড টেকনিক্যাল সাপোর্ট\n\n📞 আজই আপনার শপ অটোমেট করুন: 01580506445\n\n🏷️ #WebPulseAutomation #OnlineShop #SalesAutomation`
+  ],
+  1: [
+    `🎯 কাস্টমার সাপোর্ট দিন ২৪ ঘণ্টা, ঘুমানোর সময়েও! 🤖\n\n💡 মেসেজের রিপ্লাই দেরিতে পেলে কাস্টমার হারিয়ে যায়। WebPulse-এর স্মার্ট এআই চ্যাটবট হ্যান্ডেল করবে প্রতিটি সেলস।\n\n✨ এআই চ্যাটবটের বিশেষ সুবিধা:\n• সাবলীল বাংলায় ২৪/৭ ইনস্ট্যান্ট রিপ্লাই\n• স্বয়ংক্রিয় অর্ডার কনফার্মেশন\n• ফেসবুক ও ইনস্টাগ্রাম মেসেঞ্জার ইন্টিগ্রেশন\n\n📞 আজই ডেমো দেখতে নক দিন: 01580506445\n\n🏷️ #WebPulseAutomation #AIChatbot #MessengerAutomation`,
+    `🎯 সেলস বাড়াতে স্মার্ট এআই অ্যাসিস্ট্যান্ট এখন আপনার পেজে! ⚡\n\n💡 প্রতি মিনিটে শত শত কাস্টমার হ্যান্ডেল করুন এক সেকেন্ডেই, কোনো বাড়তি স্টাফের ঝামেলা ছাড়াই।\n\n✨ প্রধান সুবিধাসমূহ:\n• অটোমেটেড সেলস ও ডিল ক্লোজিং\n• পণ্যের সঠিক তথ্য দ্রুত প্রদান\n• ২৪/৭ নিরবচ্ছিন্ন কাস্টমার সার্ভিস\n\n📞 ডেমো দেখতে এখনই হোয়াটসঅ্যাপ করুন: 01580506445\n\n🏷️ #WebPulseAutomation #AIChatbot #BusinessGrowth`
+  ],
+  2: [
+    `🎯 আপনার কোম্পানির ব্র্যান্ড ভ্যালু বাড়ান প্রিমিয়াম কর্পোরেট ওয়েবসাইটে! 🏢\n\n💡 আধুনিক যুগে একটি আন্তর্জাতিক মানের ওয়েবসাইটই আপনার কোম্পানির প্রথম পরিচয় ও সর্বোচ্চ বিশ্বস্ততা।\n\n✨ আমাদের কর্পোরেট সলিউশন:\n• এলিগ্যান্ট ও রেস্পন্সিভ UI/UX ডিজাইন\n• হাই-স্পিড গুগল ক্লাউড হোস্টিং\n• সার্চ ইঞ্জিন অপ্টিমাইজেশন (SEO) ফ্রেন্ডলি\n\n📞 কর্পোরেট পরামর্শের জন্য হোয়াটসঅ্যাপ করুন: 01580506445\n\n🏷️ #WebPulseAutomation #CorporateWebsite #BusinessBranding`,
+    `🎯 বিজনেসের নতুন উচ্চতা: স্মার্ট ডিজিটাল রূপান্তর 💼\n\n💡 পুরনো পদ্ধতিতে সময় নষ্ট না করে আপনার পুরো অফিসিয়াল প্রসেস ও প্রেজেন্সকে নিয়ে আসুন আধুনিক প্রযুক্তিতে।\n\n✨ আমাদের স্পেশাল ফিচার:\n• কাস্টম পোর্টাল ও ক্লায়েন্ট ড্যাশবোর্ড\n• সর্বোচ্চ সাইবার সিকিউরিটি প্রটেকশন\n• ৬ মাসের আনলিমিটেড মেইনটেন্যান্স ও সাপোর্ট\n\n📞 আজই যোগাযোগ করুন: 01580506445\n\n🏷️ #WebPulseAutomation #DigitalTransformation #SoftwareAgency`
+  ],
+  3: [
+    `🎯 সঠিক অটোমেশনে ব্যবসার খরচ কমান ৫০%, সেলস বাড়ান দ্বিগুণ! 📈\n\n💡 আধুনিক প্রযুক্তির ছোঁয়ায় সফল উদ্যোক্তারা সেলস স্কেল করছেন দ্রুতগতিতে। পিছিয়ে থাকবেন না আপনিও।\n\n✨ আমাদের গ্রোথ প্যাকেজ:\n• অল-ইন-ওয়ান সেলস ফানেল ও ওয়েবসাইট\n• স্বয়ংক্রিয় অর্ডার ও ইনভয়েস জেনারেশন\n• রিয়েল-টাইম সেলস ও রেভিনিউ রিপোর্ট\n\n📞 ফ্রি কনসালটেশনের জন্য হোয়াটসঅ্যাপ করুন: 01580506445\n\n🏷️ #WebPulseAutomation #BusinessScaling #SalesFunnel`
+  ],
+  4: [
+    `🎯 সীমিত সময়ের ধামাকা অফার: ওয়েবসাইট তৈরির সাথে ৬ মাসের ফ্রি সাপোর্ট! 🎁\n\n💡 ওয়েবসাইট তৈরির পর টেকনিক্যাল মেইনটেন্যান্স নিয়ে চিন্তা? WebPulse Automation দিচ্ছে সম্পূ্র্ণ ফ্রি টেকনিক্যাল সাপোর্ট।\n\n✨ অফারের আওতায় যা পাচ্ছেন:\n• ফ্রি ডোমেইন ও ক্লাউড এসএসএল সিকিউরিটি\n• সার্বক্ষণিক স্পিড মনিটরিং ও ব্যাকআপ\n• তাৎক্ষণিক ডেডিকেটেড ইঞ্জিনিয়ারিং সাপোর্ট\n\n📞 অফারটি পেতে আজই হোয়াটসঅ্যাপ করুন: 01580506445\n\n🏷️ #WebPulseAutomation #SpecialOffer #WebSupport #FreeMaintenance`
+  ]
+};
+
+function getCuratedFallbackCaption(topicIndex) {
+  const list = FALLBACK_CAPTIONS[topicIndex % Object.keys(FALLBACK_CAPTIONS).length] || FALLBACK_CAPTIONS[0];
+  return list[Math.floor(Math.random() * list.length)];
+}
+
 async function generatePostDraft(topicIndex = null, feedback = null, currentCaption = null, apiKey) {
   const index = (topicIndex !== null && topicIndex >= 0) 
     ? (topicIndex % CONTENT_PILLARS.length) 
@@ -182,16 +208,23 @@ STRICT LENGTH & STRUCTURE REQUIREMENTS (MANDATORY):
     userPrompt = `Write a fresh, medium-length (45-65 Bengali words) Facebook post about: ${pillar.topic}.\nTheme: ${pillar.prompt}`;
   }
 
-  const messages = [{ sender: 'client', text: userPrompt }];
-  const caption = await askGemini(messages, systemPrompt, apiKey);
+  let caption = '';
+  try {
+    const messages = [{ sender: 'client', text: userPrompt }];
+    caption = await askGemini(messages, systemPrompt, apiKey);
+    caption = caption.trim();
+  } catch (err) {
+    console.warn(`⚠️ [Content AI] Gemini API temporarily busy (${err.message}). Seamlessly activated premium curated copy.`);
+    caption = getCuratedFallbackCaption(index);
+  }
 
   return {
     id: 'DRAFT-' + Date.now().toString().slice(-6),
     topicIndex: index,
     topic: pillar.topic,
-    caption: caption.trim(),
+    caption: caption,
     imageUrl: imageUrl
   };
 }
 
-module.exports = { generatePostDraft, CONTENT_PILLARS, BANNER_COLLECTIONS, CATEGORY_KEYS };
+module.exports = { generatePostDraft, CONTENT_PILLARS, BANNER_COLLECTIONS, CATEGORY_KEYS, FALLBACK_CAPTIONS };
