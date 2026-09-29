@@ -149,6 +149,9 @@ app.get('/api/webhook/facebook', (req, res) => {
 const { sendFacebookMessengerReply } = require('./facebookWebhook');
 
 app.post('/api/webhook/facebook', async (req, res) => {
+  // CRITICAL: Acknowledge Meta immediately within milliseconds to prevent timeouts/retries
+  res.status(200).send('EVENT_RECEIVED');
+
   try {
     const body = req.body;
     if (body.object === 'page') {
@@ -161,19 +164,17 @@ app.post('/api/webhook/facebook', async (req, res) => {
 
         console.log(`💬 [Facebook Messenger] New message from ${senderId}: "${text}"`);
 
-        // Send to Negotiator Engine
+        // Process message in Negotiator Engine
         const result = await negotiatorEngine.handleClientMessage(senderId, text);
 
-        // Send AI reply back to customer in Messenger
+        // Send AI reply back to customer block-by-block with typing indicators
         if (result && result.text) {
-          sendFacebookMessengerReply(senderId, result.text, config.facebook?.pageAccessToken);
+          await sendFacebookMessengerReply(senderId, result.text, config.facebook?.pageAccessToken);
         }
       }
     }
-    return res.status(200).send('EVENT_RECEIVED');
   } catch (err) {
-    console.error('❌ [Facebook Webhook Error]:', err);
-    return res.status(500).send('SERVER_ERROR');
+    console.error('❌ [Facebook Webhook Async Processing Error]:', err);
   }
 });
 

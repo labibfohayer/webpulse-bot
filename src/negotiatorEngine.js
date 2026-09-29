@@ -32,6 +32,14 @@ class NegotiatorEngine extends EventEmitter {
     return this.sessions.get(clientId);
   }
 
+  async askGeminiWithFastTimeout(messages, systemPrompt, apiKey, maxMs = 3500) {
+    const { askGemini } = require('./geminiClient');
+    return Promise.race([
+      askGemini(messages, systemPrompt, apiKey),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('AI fast response timeout (exceeded 3.5s)')), maxMs))
+    ]);
+  }
+
   /**
    * Main AI message handler for incoming client messages
    */
@@ -115,23 +123,27 @@ Company details:
 - Company Name: WebPulse Automation
 - Chairman: জনাব লাবিব ফোহায়ের (Labib Fohayer)
 - Managing Director: জনাব জায়ান আরহাম (Zayan Arham)
+- Official WhatsApp: 01580506445
 - Services: Custom E-Commerce websites, corporate business websites, sales automation bots, mobile apps, CRM & custom software.
 - Key benefits: 100% custom responsive design, lightning speed, bKash/Nagad/Card payment gateways, Google SEO setup, 6 months unlimited free technical support.
 - Standard package price: 25,000 BDT.
 - Delivery timeline: 3-5 days for landing pages, 7-10 days for full e-commerce, 15-20 days for custom software.
 - Office: Dhaka, Bangladesh.
 
-Instructions:
-1. Always speak in natural, polished, conversational Bengali (বাংলা).
-2. Whenever company leadership or higher management is mentioned, always refer to Chairman জনাব লাবিব ফোহায়ের and Managing Director জনাব জায়ান আরহাম with high respect.
-3. Answer client questions directly, smartly, and persuasively.
-4. Keep responses clean, friendly, and engaging (2 to 4 sentences).
+CRITICAL FORMATTING & STRUCTURE (STRICTLY ENFORCED):
+1. BLOCK-BY-BLOCK FORMAT: Always organize your reply into 2 or 3 distinct short paragraphs (blocks) separated by a blank line (\\n\\n).
+   - Block 1: Warm direct greeting or direct 1-sentence answer.
+   - Block 2: 2-3 short, crisp benefit/feature points or key details.
+   - Block 3: 1 friendly follow-up question or call-to-action.
+2. COMPLETENESS: Every sentence must be 100% complete and finished. NEVER leave any half-finished sentence or cut off thought.
+3. CONCISENESS: Do NOT write giant walls of text. Keep each block crisp and easy to read on mobile Messenger.
+4. TONE: Natural, polite, persuasive Bengali (বাংলা).
 5. Do not repeat greeting ("সালাম/হ্যালো") if the user is asking a question in an ongoing conversation.`;
 
-        const geminiReply = await askGemini(session.messages, systemPrompt, this.geminiApiKey);
+        const geminiReply = await this.askGeminiWithFastTimeout(session.messages, systemPrompt, this.geminiApiKey, 3500);
         return this.sendBotReply(session, geminiReply, 'discussing_requirements');
       } catch (err) {
-        console.warn('⚠️ Gemini API error, using knowledge base:', err.message);
+        console.warn('⚠️ Fast AI timed out or failed, instantly using knowledge base:', err.message);
       }
     }
 

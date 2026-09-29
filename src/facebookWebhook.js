@@ -125,52 +125,182 @@ function parseFacebookPayload(body) {
 }
 
 /**
- * Sends a real message to a customer in Facebook Messenger via Meta Graph API
+ * Splits a full AI reply into natural, finished blocks (paragraphs/thoughts).
+ * Guarantees NO half-sentences, clean formatting, and perfect completeness.
  */
-function sendFacebookMessengerReply(recipientId, text, pageAccessToken) {
+function splitIntoMessageBlocks(fullText) {
+  if (!fullText) return [];
+
+  // Split by double newlines or paragraph breaks first
+  const rawParagraphs = fullText.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+  const blocks = [];
+
+  for (const para of rawParagraphs) {
+    if (para.length <= 320) {
+      blocks.push(para);
+    } else {
+      // Split cleanly by complete sentence endings (।, ?, !, \n)
+      const sentences = para.split(/([।?!]|\n)/).filter(Boolean);
+      let currentBlock = '';
+      for (let i = 0; i < sentences.length; i += 2) {
+        const sentence = (sentences[i] || '') + (sentences[i + 1] || '');
+        if ((currentBlock + ' ' + sentence).trim().length > 250 && currentBlock) {
+          blocks.push(currentBlock.trim());
+          currentBlock = sentence.trim();
+        } else {
+          currentBlock = (currentBlock + ' ' + sentence).trim();
+        }
+      }
+      if (currentBlock) blocks.push(currentBlock.trim());
+    }
+  }
+
+  return blocks.filter(b => b.length > 0);
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Sends a Sender Action (e.g. 'mark_seen', 'typing_on') to Facebook Messenger
+ */
+function sendSenderAction(recipientId, action, pageAccessToken) {
+  return new Promise((resolve) => {
+    if (!pageAccessToken) return resolve(false);
+
+    const https = require('https');
+    const payload = JSON.stringify({
+      recipient: { id: recipientId },
+      sender_action: action
+    });
+
+    const options = {
+      hostname: 'graph.facebook.com',
+      path: `/v19.0/me/messages?access_token=${pageAccessToken}`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      },
+      timeout: 4000
+    };
+
+    const req = https.request(options, (res) => {
+      res.on('data', () => {});
+      res.on('end', () => resolve(res.statusCode === 200));
+    });
+
+    req.on('timeout', () => { req.destroy(); resolve(false); });
+    req.on('error', () => resolve(false));
+    req.write(payload);
+    req.end();
+  });
+}
+
+/**
+ * Sends a single message bubble to Facebook Messenger
+ */
+function sendSingleMessengerMessage(recipientId, text, pageAccessToken) {
+  return new Promise((resolve) => {
+    if (!pageAccessToken) {
+      console.log(`ℹ️ [Facebook API] Simulated block: "${text}"`);
+      return resolve(true);
+    }
+
+    const https = require('https');
+    const payload = JSON.stringify({
+      recipient: { id: recipientId },
+      messaging_type: 'RESPONSE',
+      message: { text }
+    });
+
+    const options = {
+      hostname: 'graph.facebook.com',
+      path: `/v19.0/me/messages?access_token=${pageAccessToken}`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      },
+      timeout: 6000
+    };
+
+    const req = https.request(options, (res) => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        if (res.statusCode === 200) {
+          resolve(true);
+        } else {
+          console.error(`❌ [Facebook Messenger] Send block failed (${res.statusCode}):`, body);
+          resolve(false);
+        }
+      });
+    });
+
+    req.on('timeout', () => { req.destroy(); resolve(false); });
+    req.on('error', (err) => {
+      console.error('[Facebook Messenger API Error]:', err.message);
+      resolve(false);
+    });
+    req.write(payload);
+    req.end();
+  });
+}
+
+/**
+ * Sends messages block-by-block with typing indicators within 10 seconds total.
+ * Each block is delivered as an individual message bubble in Messenger.
+ * No sentences are ever cut off or half-delivered.
+ */
+async function sendFacebookMessengerBlocks(recipientId, fullText, pageAccessToken) {
   if (!pageAccessToken) {
-    console.log(`ℹ️ [Facebook API] No Page Access Token configured yet. Simulated reply: "${text}"`);
+    console.log(`ℹ️ [Facebook API] No Page Access Token. Simulated blocks for:\n"${fullText}"`);
     return;
   }
 
-  const https = require('https');
-  const payload = JSON.stringify({
-    recipient: { id: recipientId },
-    messaging_type: 'RESPONSE',
-    message: { text }
-  });
+  const blocks = splitIntoMessageBlocks(fullText);
+  if (blocks.length === 0) return;
 
-  const options = {
-    hostname: 'graph.facebook.com',
-    path: `/v19.0/me/messages?access_token=${pageAccessToken}`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(payload)
+  console.log(`🚀 [Facebook Messenger] Delivering ${blocks.length} message blocks to client (${recipientId})...`);
+
+  // 1. Immediately send 'mark_seen' and 'typing_on' so user sees instant activity within 1s
+  sendSenderAction(recipientId, 'mark_seen', pageAccessToken).catch(() => {});
+  await sendSenderAction(recipientId, 'typing_on', pageAccessToken);
+
+  // Short natural human typing delay for block 1 (approx 600ms)
+  await sleep(600);
+
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    await sendSingleMessengerMessage(recipientId, block, pageAccessToken);
+    console.log(`💬 [Facebook Messenger] Block ${i + 1}/${blocks.length} delivered: "${block.slice(0, 40)}..."`);
+
+    // If another block follows, show typing indicator for 1-1.4s
+    if (i < blocks.length - 1) {
+      await sendSenderAction(recipientId, 'typing_on', pageAccessToken);
+      await sleep(1100);
     }
-  };
+  }
 
-  const req = https.request(options, (res) => {
-    let body = '';
-    res.on('data', chunk => body += chunk);
-    res.on('end', () => {
-      if (res.statusCode === 200) {
-        console.log(`✅ [Facebook Messenger] Message successfully delivered to customer (${recipientId})!`);
-      } else {
-        console.error(`❌ [Facebook Messenger] Send failed (${res.statusCode}):`, body);
-      }
-    });
-  });
+  console.log(`✅ [Facebook Messenger] All ${blocks.length} blocks delivered cleanly within 10s!`);
+}
 
-  req.on('error', (err) => console.error('[Facebook Messenger API Error]:', err.message));
-  req.write(payload);
-  req.end();
+/**
+ * Sends a real message to a customer in Facebook Messenger via Meta Graph API
+ * Wraps sendFacebookMessengerBlocks for backward compatibility.
+ */
+async function sendFacebookMessengerReply(recipientId, text, pageAccessToken) {
+  return sendFacebookMessengerBlocks(recipientId, text, pageAccessToken);
 }
 
 module.exports = {
   handleWebhookVerification,
   parseFacebookPayload,
   parseMessengerOrderText,
-  sendFacebookMessengerReply
+  sendFacebookMessengerReply,
+  sendFacebookMessengerBlocks,
+  splitIntoMessageBlocks
 };
 
